@@ -4,14 +4,14 @@ on:
   pull_request:
     paths:
       - "backend/**"
-      - "frontend/casino/**"
+      - "frontend/**"
       - ".github/workflows/backend-pr-checks.yml"
   push:
     branches:
       - main
     paths:
       - "backend/**"
-      - "frontend/casino/**"
+      - "frontend/**"
       - ".github/workflows/backend-pr-checks.yml"
 
 jobs:
