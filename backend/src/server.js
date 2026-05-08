@@ -1,7 +1,7 @@
 import express from "express";
-import transactionRouter from "./routes/transactions";
-import userRouter from "./routes/user";
-import authRouter from "./routes/auth";
+import transactionRouter from "./routes/transactions.js";
+import userRouter from "./routes/user.js";
+import authRouter from "./routes/auth.js";
 
 const port = process.env.PORT;
 const app = express();

@@ -1,8 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { con } from "../db/connection";
-import Auth from "../middleware/auth";
+import { con } from "../db/connection.js";
+import Auth from "../middleware/auth.js";
 
 const authRouter = express.Router();
 
@@ -25,13 +25,13 @@ authRouter.post("/register", async (req, res) => {
     const hashedPass = await bcrypt.hash(password, 10);
 
     await con.query(
-      "INSERT INTO user (username, email, password_hash, balance, created_at, updated_at) VALUES (?,?,?,?,?,?)",
+      "INSERT INTO users (username, email, password_hash, balance, created_at, updated_at) VALUES (?,?,?,?,?,?)",
       [username, email, hashedPass, 1000, date, date],
     );
 
     return res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" });
+    return res.status(500).json({ error: "DB Error" + err });
   }
 });
 
@@ -50,7 +50,7 @@ authRouter.post("/login", async (req, res) => {
 
     if (!passMatch) return res.status(401).json({ error: "Bad Password" });
 
-    const token = `${username}_token_${crypto.randomBytes(10)}`;
+    const token = `${username}_token_${crypto.randomBytes(10).toString("hex")}`;
     const date = new Date();
     const expires_at = new Date(date.getTime() + 3 * 60 * 60 * 1000);
     await con.query(
@@ -70,7 +70,7 @@ authRouter.post("/login", async (req, res) => {
       balance: user[0].balance,
     });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" });
+    return res.status(500).json({ error: "DB Error" + err });
   }
 });
 
@@ -83,7 +83,7 @@ authRouter.post("/logout", Auth, async (req, res) => {
     res.clearCookie("token");
     res.json({ message: "Logged out successfully" });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" });
+    return res.status(500).json({ error: "DB Error" + err });
   }
 });
 
