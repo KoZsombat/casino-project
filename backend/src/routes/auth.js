@@ -60,9 +60,11 @@ authRouter.post("/login", async (req, res) => {
       [user[0].id, token, expires_at, date],
     );
 
+    const isSecureCookie = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: isSecureCookie,
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });

@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import transactionRouter from "./routes/transactions.js";
 import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
@@ -7,6 +8,7 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 const router = express.Router();
 app.use("/api", router);
