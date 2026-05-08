@@ -54,7 +54,8 @@ authRouter.post("/login", async (req, res) => {
 
     const token = `${username}_token_${crypto.randomBytes(10).toString("hex")}`;
     const date = new Date();
-    const expires_at = new Date(date.getTime() + 3 * 60 * 60 * 1000);
+    const sessionMaxAgeMs = 3 * 60 * 60 * 1000;
+    const expires_at = new Date(date.getTime() + sessionMaxAgeMs);
     await con.query(
       "INSERT INTO sessions (user_id, token, expires_at, created_at) VALUES (?,?,?,?)",
       [user[0].id, token, expires_at, date],
@@ -66,7 +67,7 @@ authRouter.post("/login", async (req, res) => {
       httpOnly: true,
       secure: isSecureCookie,
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: sessionMaxAgeMs,
     });
     return res.status(200).json({
       message: "Login successful",
