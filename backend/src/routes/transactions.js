@@ -18,8 +18,9 @@ transactionRouter.post("/deposit", Auth, async (req, res) => {
     const [user] = await con.query("SELECT * FROM users WHERE id = ?", [
       sessionRow[0].user_id,
     ]);
-    await con.query("UPDATE users SET balance = ? WHERE user_id = ?", [
+    await con.query("UPDATE users SET balance = ? WHERE id = ?", [
       user[0].balance + amount,
+      sessionRow[0].user_id,
     ]);
 
     return res.status(200).json({

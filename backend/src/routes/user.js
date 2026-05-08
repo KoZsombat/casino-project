@@ -10,11 +10,16 @@ userRouter.post("/balance", Auth, async (req, res) => {
       "SELECT * FROM sessions WHERE token = ?",
       [req.cookies.token],
     );
+
+    if (sessionRow.length === 0) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     const [user] = await con.query("SELECT * FROM users WHERE id = ?", [
       sessionRow[0].user_id,
     ]);
 
-    return res.status(200).json({ balance: user[0]?.balance });
+    return res.status(200).json({ balance: user[0].balance });
   } catch (err) {
     return res.status(500).json({ error: "DB Error" + err });
   }

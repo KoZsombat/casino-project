@@ -46,9 +46,11 @@ authRouter.post("/login", async (req, res) => {
       username,
     ]);
 
+    if (!user || user.length === 0)
+      return res.status(401).json({ error: "Invalid username or password" });
     const passMatch = await bcrypt.compare(password, user[0].password_hash);
-
-    if (!passMatch) return res.status(401).json({ error: "Bad Password" });
+    if (!passMatch)
+      return res.status(401).json({ error: "Invalid username or password" });
 
     const token = `${username}_token_${crypto.randomBytes(10).toString("hex")}`;
     const date = new Date();
@@ -76,7 +78,7 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.post("/logout", Auth, async (req, res) => {
   try {
-    await con.query("DELETE * FROM sessions WHERE token = ?", [
+    await con.query("DELETE FROM sessions WHERE token = ?", [
       req.cookies.token,
     ]);
 
