@@ -1,0 +1,4 @@
+npx lint-staged
+
+# Run full repository linting (frontend + backend) using root config
+npx eslint . --ext .js,.jsx,.ts,.tsx --config ./eslint.config.js || true

@@ -1,4 +1,4 @@
-import { con } from "../db/connection";
+import { con } from "../db/connection.js";
 
 export default async function Auth(req, res, next) {
   const token = req.cookies.token;
