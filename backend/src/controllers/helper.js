@@ -38,5 +38,5 @@ export async function GetBalance(win, req) {
     sessionRow[0].user_id,
   ]);
 
-  return updatedUser[0].balance;
+  return { newBalance: updatedUser[0].balance };
 }
