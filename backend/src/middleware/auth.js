@@ -12,7 +12,8 @@ export default async function Auth(req, res, next) {
     if (tokenFound.length > 0 && tokenFound[0].expires_at > new Date())
       return next();
     else return res.status(401).json({ error: "Expired or Invalid Token" });
-  } catch {
-    return res.status(500).json({ error: "DB Error" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
