@@ -31,7 +31,8 @@ authRouter.post("/register", async (req, res) => {
 
     return res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" + err });
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -75,7 +76,8 @@ authRouter.post("/login", async (req, res) => {
       balance: user[0].balance,
     });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" + err });
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -88,7 +90,8 @@ authRouter.post("/logout", Auth, async (req, res) => {
     res.clearCookie("token");
     res.json({ message: "Logged out successfully" });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" + err });
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

@@ -28,7 +28,8 @@ transactionRouter.post("/deposit", Auth, async (req, res) => {
       newBalance: user[0].balance + amount,
     });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" + err });
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

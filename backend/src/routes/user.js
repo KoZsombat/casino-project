@@ -21,7 +21,8 @@ userRouter.post("/balance", Auth, async (req, res) => {
 
     return res.status(200).json({ balance: user[0].balance });
   } catch (err) {
-    return res.status(500).json({ error: "DB Error" + err });
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
