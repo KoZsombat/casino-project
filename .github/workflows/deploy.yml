@@ -1,0 +1,75 @@
+name: IIS Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.18.0"
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+
+      - name: Install Root Dependencies
+        run: npm ci
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Build Project
+        working-directory: frontend
+        run: npm run build
+
+      - name: Deploy to IIS
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+          $appPoolName = "Casino"
+          $sourcePath = Join-Path $PWD "frontend\dist"
+          $destinationPath = "C:\Users\Administrator\Desktop\Casino\dist"
+
+          try {
+            $poolState = (Get-WebAppPoolState -Name $appPoolName).Value
+            if ($poolState -eq "Started") {
+              Stop-WebAppPool -Name $appPoolName
+            }
+
+            if (-not (Test-Path -Path $destinationPath)) {
+              New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
+            }
+
+            robocopy $sourcePath $destinationPath /MIR /R:2 /W:2 /NFL /NDL /NP
+            $robocopyExitCode = $LASTEXITCODE
+            if ($robocopyExitCode -gt 7) {
+              throw "Robocopy failed with exit code $robocopyExitCode"
+            }
+
+            # GitHub Actions a nem nulla LASTEXITCODE-ot hibanak tekinti,
+            # de a Robocopy 0-7 kozotti kodjai sikeres/allokalt allapotok.
+            $global:LASTEXITCODE = 0
+          }
+          finally {
+            # Adunk egy kis időt az IIS-nek, hogy magához térjen a másolás után
+            Start-Sleep -s 5
+            try {
+              $endState = (Get-WebAppPoolState -Name $appPoolName).Value
+              if ($endState -ne "Started") {
+                Start-WebAppPool -Name $appPoolName
+              }
+            } catch {
+              Write-Host "Figyelem: Nem sikerült automatikusan elindítani az App Pool-t, de a másolás kész."
+            }
+          }
