@@ -80,7 +80,6 @@ export default function Roulette(bets) {
         if (typeof bet.type == "number") {
           winner == bet.type ? (payout += bet.amount * 36) : null;
         }
-        winner == bet.type ? (payout += bet.amount * 36) : null;
         break;
     }
   });
