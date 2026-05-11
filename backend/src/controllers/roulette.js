@@ -76,7 +76,10 @@ export default function Roulette(bets) {
           ? (payout += bet.amount * 2)
           : null;
         break;
-      case typeof bet.type == Number:
+      default:
+        if (typeof bet.type == "number") {
+          winner == bet.type ? (payout += bet.amount * 36) : null;
+        }
         winner == bet.type ? (payout += bet.amount * 36) : null;
         break;
     }

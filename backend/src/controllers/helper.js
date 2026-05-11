@@ -10,6 +10,9 @@ export async function Bet(amount, req, res) {
     sessionRow[0].user_id,
   ]);
 
+  if (amount < 0 || typeof amount != "number")
+    return res.status(400).json({ error: "Bad Input" });
+
   if (user[0].balance - amount < 0)
     return res.status(400).json({ error: "Not Enough Balance" });
 
