@@ -1,5 +1,4 @@
 import express from "express";
-import { con } from "../db/connection.js";
 import Auth from "../middleware/auth.js";
 import Slot from "./slot.js";
 import Roulette from "../controllers/roulette.js";
