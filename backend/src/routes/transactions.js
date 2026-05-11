@@ -19,17 +19,17 @@ transactionRouter.post("/deposit", Auth, async (req, res) => {
     if (!sessionRow.length)
       return res.status(401).json({ error: "Unauthorized" });
 
-    const [user] = await con.query("SELECT * FROM users WHERE id = ?", [
+    await con.query("UPDATE users SET balance = balance + ? WHERE id = ?", [
+      amount,
       sessionRow[0].user_id,
     ]);
-    await con.query("UPDATE users SET balance = ? WHERE id = ?", [
-      user[0].balance + amount,
+    const [user] = await con.query("SELECT balance FROM users WHERE id = ?", [
       sessionRow[0].user_id,
     ]);
 
     return res.status(200).json({
       message: "Deposit successful",
-      newBalance: user[0].balance + amount,
+      newBalance: user[0].balance,
     });
   } catch (err) {
     console.error(err);

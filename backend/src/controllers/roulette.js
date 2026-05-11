@@ -58,34 +58,26 @@ export default function Roulette(bets) {
   bets.forEach((bet) => {
     switch (bet.type) {
       case "red":
-        colors[winner] == "red"
-          ? (payout += bets.find((e) => e.type == e.type)[0].amount * 2)
-          : null;
+        colors[winner] == "red" ? (payout += bet.amount * 2) : null;
         break;
       case "black":
-        colors[winner] == "black"
-          ? (payout += bets.find((e) => e.type == e.type)[0].amount * 2)
-          : null;
+        colors[winner] == "black" ? (payout += bet.amount * 2) : null;
         break;
       case "green":
-        colors[winner] == "green"
-          ? (payout += bets.find((e) => e.type == e.type)[0].amount * 36)
-          : null;
+        colors[winner] == "green" ? (payout += bet.amount * 36) : null;
         break;
       case "even":
         winner > 0 && winner <= 36 && winner % 2 == 0
-          ? (payout += bets.find((e) => e.type == e.type)[0].amount * 2)
+          ? (payout += bet.amount * 2)
           : null;
         break;
       case "odd":
         winner > 0 && winner <= 36 && winner % 2 == 1
-          ? (payout += bets.find((e) => e.type == e.type)[0].amount * 2)
+          ? (payout += bet.amount * 2)
           : null;
         break;
       case typeof bet.type == Number:
-        winner == bet.type
-          ? (payout += bets.find((e) => e.type == e.type)[0].amount * 36)
-          : null;
+        winner == bet.type ? (payout += bet.amount * 36) : null;
         break;
     }
   });
