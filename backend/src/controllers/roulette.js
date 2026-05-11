@@ -73,12 +73,12 @@ export default function Roulette(bets) {
           : null;
         break;
       case "even":
-        winner % 2 == 0
+        winner > 0 && winner <= 36 && winner % 2 == 0
           ? (payout += bets.find((e) => e.type == e.type)[0].amount * 2)
           : null;
         break;
       case "odd":
-        winner % 2 == 1
+        winner > 0 && winner <= 36 && winner % 2 == 1
           ? (payout += bets.find((e) => e.type == e.type)[0].amount * 2)
           : null;
         break;

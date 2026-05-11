@@ -15,6 +15,10 @@ transactionRouter.post("/deposit", Auth, async (req, res) => {
       "SELECT * FROM sessions WHERE token = ?",
       [req.cookies.token],
     );
+
+    if (!sessionRow.length)
+      return res.status(401).json({ error: "Unauthorized" });
+
     const [user] = await con.query("SELECT * FROM users WHERE id = ?", [
       sessionRow[0].user_id,
     ]);
