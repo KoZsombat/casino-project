@@ -1,9 +1,12 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import transactionRouter from "./routes/transactions.js";
 import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
 import gamesRouter from "./routes/games.js";
+
+dotenv.config();
 
 const port = process.env.PORT;
 const app = express();
