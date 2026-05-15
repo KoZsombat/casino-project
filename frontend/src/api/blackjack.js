@@ -42,8 +42,8 @@ function calculateScore(cards) {
   return score;
 }
 
-export async function startBlackjack(bet) {
-  await new Promise((resolve) => setTimeout(resolve, 200));
+export async function startBlackjack() {
+  await new Promise((resolve) => globalThis.setTimeout(resolve, 200));
 
   const playerCards = [drawCard(), drawCard()];
   const dealerFirstCard = drawCard();
@@ -61,7 +61,7 @@ export async function startBlackjack(bet) {
 }
 
 export async function hitBlackjack(state) {
-  await new Promise((resolve) => setTimeout(resolve, 200));
+  await new Promise((resolve) => globalThis.setTimeout(resolve, 200));
 
   const newCard = drawCard();
   const playerCards = [...state.playerCards, newCard];
@@ -77,7 +77,7 @@ export async function hitBlackjack(state) {
 }
 
 export async function standBlackjack(state) {
-  await new Promise((resolve) => setTimeout(resolve, 200));
+  await new Promise((resolve) => globalThis.setTimeout(resolve, 200));
 
   const dealerCards = [state.dealerCards[0], state._hiddenCard];
   let dealerScore = calculateScore(dealerCards);

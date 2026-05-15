@@ -18,7 +18,6 @@ export function setupDealerHand(element) {
       cardEl.textContent = "?";
     } else {
       const suit = card.slice(-1);
-      const value = card.slice(0, -1);
 
       if (suit === "♥" || suit === "♦") {
         cardEl.classList.add("card-red");
