@@ -1,4 +1,4 @@
-import showAlert from "./showAlert";
+import showAlert from "../showAlert";
 
 export function setupBettingTable(element, options) {
   // options = {
