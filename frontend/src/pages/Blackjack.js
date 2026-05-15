@@ -6,11 +6,11 @@ import {
   standBlackjack,
 } from "../api/blackjack.js";
 import { setupGameHeader } from "../components/GameHeader.js";
-import { setupDealerHand } from "../components/DealerHand.js";
-import { setupPlayerHand } from "../components/PlayerHand.js";
-import { setupBetControls } from "../components/BetControls.js";
-import { setupActionButtons } from "../components/ActionButtons.js";
-import { setupRoundResult } from "../components/RoundResult.js";
+import { setupDealerHand } from "../components/blackjack/DealerHand.js";
+import { setupPlayerHand } from "../components/blackjack/PlayerHand.js";
+import { setupBetControls } from "../components/blackjack/BetControls.js";
+import { setupActionButtons } from "../components/blackjack/ActionButtons.js";
+import { setupRoundResult } from "../components/blackjack/RoundResult.js";
 
 export function setupBlackjack(element) {
   let balance = 1000;
