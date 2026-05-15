@@ -16,7 +16,7 @@ export function setupRouletteResult(element) {
 
       for (let i = 0; i < roll.length - 1; i++) {
         currentNumberEl.textContent = roll[i];
-        await new Promise((resolve) => setTimeout(resolve, 70));
+        await new Promise((resolve) => globalThis.setTimeout(resolve, 70));
       }
     },
 

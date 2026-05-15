@@ -4,6 +4,7 @@ import { setupGameHeader } from "../components/GameHeader.js";
 import { setupBettingTable } from "../components/BettingTable.js";
 import { setupSpinButton } from "../components/SpinButton.js";
 import { setupRouletteResult } from "../components/RouletteResult.js";
+import showAlert from "../components/showAlert.js";
 
 export function setupRoulette(element) {
   let balance = 1000;
@@ -23,7 +24,7 @@ export function setupRoulette(element) {
     initialBalance: balance,
     onBack: () => {
       console.log("Vissza gomb megnyomva");
-      alert("Vissza a főoldalra (még nincs implementálva)");
+      showAlert("Vissza a főoldalra (még nincs implementálva)");
     },
   });
 

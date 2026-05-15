@@ -1,3 +1,5 @@
+import showAlert from "./showAlert";
+
 export function setupBettingTable(element, options) {
   // options = {
   //   getBalance: function,    // visszaadja az aktuális egyenleget
@@ -77,20 +79,20 @@ export function setupBettingTable(element, options) {
     if (type === "number") {
       const number = parseInt(betNumberEl.value);
       if (isNaN(number) || number < 0 || number > 36) {
-        alert("Adj meg egy számot 0 és 36 között!");
+        showAlert("Adj meg egy számot 0 és 36 között!");
         return;
       }
       type = number.toString();
     }
 
     if (!amount || amount <= 0) {
-      alert("Adj meg érvényes összeget!");
+      showAlert("Adj meg érvényes összeget!");
       return;
     }
 
     const balance = options.getBalance();
     if (amount > balance) {
-      alert("Nincs elég egyenleged!");
+      showAlert("Nincs elég egyenleged!");
       return;
     }
 
