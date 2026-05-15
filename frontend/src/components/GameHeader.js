@@ -6,20 +6,20 @@ export function setupGameHeader(element, options) {
         Egyenleg: <span id="balance">${options.initialBalance}</span> Ft
       </div>
     </div>
-  `
+  `;
 
-  const balanceEl = element.querySelector('#balance')
-  const backBtn = element.querySelector('#back-btn')
+  const balanceEl = element.querySelector("#balance");
+  const backBtn = element.querySelector("#back-btn");
 
-  backBtn.addEventListener('click', () => {
+  backBtn.addEventListener("click", () => {
     if (options.onBack) {
-      options.onBack()
+      options.onBack();
     }
-  })
+  });
 
   return {
     setBalance(newBalance) {
-      balanceEl.textContent = newBalance
-    }
-  }
+      balanceEl.textContent = newBalance;
+    },
+  };
 }

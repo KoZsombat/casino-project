@@ -1,4 +1,4 @@
-import showAlert from './showAlert.js'
+import showAlert from '../showAlert.js'
 export function setupBetControls(element, options) {
   element.innerHTML = `
     <div class="bet-controls">
