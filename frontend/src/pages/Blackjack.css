@@ -1,0 +1,148 @@
+.blackjack-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+
+.blackjack-page h1 {
+  color: #ffd700;
+  margin-bottom: 20px;
+}
+
+.blackjack-page h2 {
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #ccc;
+}
+
+.blackjack-page button {
+  padding: 10px 20px;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  margin: 5px;
+}
+
+.blackjack-page button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.blackjack-page button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.blackjack-page input[type="number"] {
+  padding: 10px;
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 14px;
+  margin: 5px;
+}
+
+.hand {
+  margin: 20px 0;
+}
+
+.cards {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  min-height: 110px;
+  margin-top: 10px;
+}
+
+.card {
+  width: 70px;
+  height: 100px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  user-select: none;
+}
+
+.card-red {
+  color: #dc2626;
+}
+
+.card-black {
+  color: #1a1a1a;
+}
+
+.card-hidden {
+  background-color: #3b3b3b;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #2a2a2a,
+    #2a2a2a 5px,
+    #3b3b3b 5px,
+    #3b3b3b 10px
+  );
+  color: #fff;
+}
+
+#balance {
+  color: #4ade80;
+  font-weight: bold;
+}
+
+.round-result {
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.round-result h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.round-result p {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.action-buttons button {
+  font-size: 16px;
+  padding: 12px 30px;
+  margin: 5px 10px;
+}
+
+#hit-btn {
+  background-color: #16a34a;
+}
+
+#hit-btn:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+#stand-btn {
+  background-color: #dc2626;
+}
+
+#stand-btn:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+#start-btn {
+  background-color: #16a34a;
+  padding: 12px 30px;
+  font-size: 16px;
+}
