@@ -1,7 +1,7 @@
 // MOCK API - fejlesztéshez, később lecseréljük igazi fetch-re
 export async function spinRoulette(bets) {
   // Szimuláljuk a hálózati késleltetést (300 ms)
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  await new Promise((resolve) => globalThis.setTimeout(resolve, 300));
 
   // Generáljunk egy random roll listát (kb. 20-30 szám hosszú)
   const roll = [];

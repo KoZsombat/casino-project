@@ -92,6 +92,12 @@ export function setupRoulette(element) {
   }
 
   // ===== STATE MÓDOSÍTÓK =====
+  function showAlert(message) {
+    if (typeof window !== "undefined" && typeof window.alert === "function") {
+      window.alert(message);
+    }
+  }
+
   function addBet() {
     let type = betTypeEl.value;
     const amount = parseInt(betAmountEl.value);
@@ -100,18 +106,18 @@ export function setupRoulette(element) {
     if (type === "number") {
       const number = parseInt(betNumberEl.value);
       if (isNaN(number) || number < 0 || number > 36) {
-        alert("Adj meg egy számot 0 és 36 között!");
+        showAlert("Adj meg egy számot 0 és 36 között!");
         return;
       }
       type = number.toString(); // pl. '17' lesz a type
     }
 
     if (!amount || amount <= 0) {
-      alert("Adj meg érvényes összeget!");
+      showAlert("Adj meg érvényes összeget!");
       return;
     }
     if (amount > balance) {
-      alert("Nincs elég egyenleged!");
+      showAlert("Nincs elég egyenleged!");
       return;
     }
 
@@ -157,7 +163,7 @@ export function setupRoulette(element) {
       bets = [];
     } catch (err) {
       console.error("Hiba a pörgetés közben:", err);
-      alert("Hiba történt a pörgetés közben!");
+      showAlert("Hiba történt a pörgetés közben!");
     } finally {
       // 7. Unlock - bármi is történt, oldjuk a zárolást
       isSpinning = false;
@@ -172,7 +178,7 @@ export function setupRoulette(element) {
     for (let i = 0; i < roll.length - 1; i++) {
       currentNumberEl.textContent = roll[i];
       // Várunk 70ms-et a következő szám előtt
-      await new Promise((resolve) => setTimeout(resolve, 70));
+      await new Promise((resolve) => globalThis.setTimeout(resolve, 70));
     }
   }
 
