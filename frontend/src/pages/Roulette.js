@@ -6,7 +6,7 @@ import { setupSpinButton } from "../components/roulette/Spinbutton.js";
 import { setupRouletteWheel } from "../components/roulette/RouletteWheel.js";
 import showAlert from "../components/showAlert.js";
 
-export function setupRoulette(element) {
+export function setupRoulette(element, options = {}) {
   let balance = 1000;
   let isSpinning = false;
 
@@ -30,8 +30,7 @@ export function setupRoulette(element) {
   const header = setupGameHeader(element.querySelector("#header-container"), {
     initialBalance: balance,
     onBack: () => {
-      console.log("Vissza gomb megnyomva");
-      showAlert("Vissza a főoldalra (még nincs implementálva)");
+      if (options.onBack) options.onBack();
     },
   });
 

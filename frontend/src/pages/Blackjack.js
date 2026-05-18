@@ -26,7 +26,7 @@ function wait(ms) {
   return new Promise((resolve) => globalThis.setTimeout(resolve, ms));
 }
 
-export function setupBlackjack(element) {
+export function setupBlackjack(element, options = {}) {
   let balance = 1000;
 
   let gameState = createInitialState();
@@ -66,7 +66,7 @@ export function setupBlackjack(element) {
   const header = setupGameHeader(element.querySelector("#header-container"), {
     initialBalance: balance,
     onBack: () => {
-      showAlert("Vissza a főoldalra (még nincs implementálva)");
+      if (options.onBack) options.onBack();
     },
   });
 
