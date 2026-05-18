@@ -1,33 +1,73 @@
+const RANKS = [
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "J",
+  "Q",
+  "K",
+  "A",
+];
+const SUITS = ["♠", "♥", "♦", "♣"];
+
+const NUM_DECKS = 2;
+const RESHUFFLE_AT = 26;
+
+let shoe = [];
+
+function buildShoe(numDecks = NUM_DECKS) {
+  const cards = [];
+  for (let d = 0; d < numDecks; d++) {
+    for (const r of RANKS) {
+      for (const s of SUITS) {
+        cards.push(r + s);
+      }
+    }
+  }
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  return cards;
+}
+
+function ensureShoe() {
+  if (shoe.length <= RESHUFFLE_AT) {
+    shoe = buildShoe();
+  }
+}
+
 function drawCard() {
-  const values = [
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "J",
-    "Q",
-    "K",
-    "A",
-  ];
-  const suits = ["♠", "♥", "♦", "♣"];
-  const value = values[Math.floor(Math.random() * values.length)];
-  const suit = suits[Math.floor(Math.random() * suits.length)];
-  return value + suit;
+  ensureShoe();
+  return shoe.pop();
+}
+
+export function getCardsRemaining() {
+  ensureShoe();
+  return shoe.length;
+}
+
+export function getDeckCount() {
+  return NUM_DECKS;
+}
+
+function getRank(card) {
+  return card.slice(0, -1);
 }
 
 function getCardValue(card) {
-  const value = card.slice(0, -1);
-  if (value === "J" || value === "Q" || value === "K") return 10;
-  if (value === "A") return 11;
-  return parseInt(value);
+  const rank = getRank(card);
+  if (rank === "J" || rank === "Q" || rank === "K") return 10;
+  if (rank === "A") return 11;
+  return parseInt(rank, 10);
 }
 
-function calculateScore(cards) {
+export function calculateScore(cards) {
   let score = 0;
   let aces = 0;
   for (const card of cards) {
@@ -42,74 +82,60 @@ function calculateScore(cards) {
   return score;
 }
 
+export function canSplit(cards) {
+  if (!cards || cards.length !== 2) return false;
+  return getCardValue(cards[0]) === getCardValue(cards[1]);
+}
+
+export function isPairOfAces(cards) {
+  return (
+    cards &&
+    cards.length === 2 &&
+    getRank(cards[0]) === "A" &&
+    getRank(cards[1]) === "A"
+  );
+}
+
+async function delay(ms = 200) {
+  await new Promise((resolve) => globalThis.setTimeout(resolve, ms));
+}
+
 export async function startBlackjack() {
-  await new Promise((resolve) => globalThis.setTimeout(resolve, 200));
+  await delay();
 
   const playerCards = [drawCard(), drawCard()];
   const dealerFirstCard = drawCard();
   const dealerHiddenCard = drawCard();
 
-  const dealerCards = [dealerFirstCard, "?"];
-
   return {
     playerCards,
-    dealerCards,
+    dealerCards: [dealerFirstCard, "?"],
     playerScore: calculateScore(playerCards),
     dealerScore: getCardValue(dealerFirstCard),
     _hiddenCard: dealerHiddenCard,
   };
 }
 
-export async function hitBlackjack(state) {
-  await new Promise((resolve) => globalThis.setTimeout(resolve, 200));
-
+export async function drawForHand(cards) {
+  await delay();
   const newCard = drawCard();
-  const playerCards = [...state.playerCards, newCard];
-  const playerScore = calculateScore(playerCards);
-  const bust = playerScore > 21;
-
+  const nextCards = [...cards, newCard];
   return {
     newCard,
-    playerCards,
-    playerScore,
-    bust,
+    cards: nextCards,
+    score: calculateScore(nextCards),
   };
 }
 
-export async function standBlackjack(state) {
-  await new Promise((resolve) => globalThis.setTimeout(resolve, 200));
-
-  const dealerCards = [state.dealerCards[0], state._hiddenCard];
-  let dealerScore = calculateScore(dealerCards);
-
-  while (dealerScore < 17) {
-    const newCard = drawCard();
-    dealerCards.push(newCard);
-    dealerScore = calculateScore(dealerCards);
+export function settleHand(playerScore, dealerScore, bet) {
+  if (playerScore > 21) {
+    return { result: "dealer_wins", payout: 0 };
   }
-
-  let result, payout;
-  const playerScore = state.playerScore;
-
-  if (dealerScore > 21) {
-    result = "player_wins";
-    payout = state.bet * 2;
-  } else if (dealerScore > playerScore) {
-    result = "dealer_wins";
-    payout = 0;
-  } else if (dealerScore < playerScore) {
-    result = "player_wins";
-    payout = state.bet * 2;
-  } else {
-    result = "tie";
-    payout = state.bet;
+  if (dealerScore > 21 || playerScore > dealerScore) {
+    return { result: "player_wins", payout: bet * 2 };
   }
-
-  return {
-    dealerCards,
-    dealerScore,
-    result,
-    payout,
-    newBalance: null,
-  };
+  if (playerScore < dealerScore) {
+    return { result: "dealer_wins", payout: 0 };
+  }
+  return { result: "tie", payout: bet };
 }
