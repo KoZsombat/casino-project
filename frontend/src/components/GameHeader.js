@@ -1,4 +1,9 @@
 export function setupGameHeader(element, options) {
+  // options = { initialBalance: number, onBack: function }
+  // Az options egy objektum, amit a szülő (Roulette.js) ad át
+  // - initialBalance: kezdő egyenleg
+  // - onBack: callback, amit hívunk a vissza gombra kattintáskor
+
   element.innerHTML = `
     <div class="game-header">
       <button id="back-btn" class="back-btn">← Vissza</button>
