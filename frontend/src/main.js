@@ -1,4 +1,10 @@
 import './style.css'
+import { setupRoulette } from './pages/Roulette.js'
+
+setupRoulette(document.querySelector('#app'))
+
+/*
+import './style.css'
 import javascriptLogo from './assets/javascript.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -58,3 +64,4 @@ document.querySelector('#app').innerHTML = `
 `
 
 setupCounter(document.querySelector('#counter'))
+*/
