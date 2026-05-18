@@ -2,7 +2,7 @@ import "./Roulette.css";
 import { spinRoulette } from "../api/roulette.js";
 import { setupGameHeader } from "../components/GameHeader.js";
 import { setupBettingTable } from "../components/roulette/BettingTable.js";
-import { setupSpinButton } from "../components/roulette/SpinButton.js";
+import { setupSpinButton } from "../components/roulette/Spinbutton.js";
 import { setupRouletteResult } from "../components/roulette/RouletteResult.js";
 import showAlert from "../components/showAlert.js";
 
