@@ -3,7 +3,7 @@ import { spinRoulette } from "../api/roulette.js";
 import { setupGameHeader } from "../components/GameHeader.js";
 import { setupBettingTable } from "../components/roulette/BettingTable.js";
 import { setupSpinButton } from "../components/roulette/Spinbutton.js";
-import { setupRouletteResult } from "../components/roulette/RouletteResult.js";
+import { setupRouletteWheel } from "../components/roulette/RouletteWheel.js";
 import showAlert from "../components/showAlert.js";
 
 export function setupRoulette(element) {
@@ -14,9 +14,16 @@ export function setupRoulette(element) {
     <div class="roulette-page">
       <div id="header-container"></div>
       <h1>Rulett</h1>
-      <div id="result-container"></div>
-      <div id="betting-container"></div>
-      <div id="spin-container"></div>
+
+      <div class="roulette-stage">
+        <div class="wheel-column">
+          <div id="wheel-container"></div>
+          <div id="spin-container"></div>
+        </div>
+        <div class="table-column">
+          <div id="betting-container"></div>
+        </div>
+      </div>
     </div>
   `;
 
@@ -28,9 +35,7 @@ export function setupRoulette(element) {
     },
   });
 
-  const result = setupRouletteResult(
-    element.querySelector("#result-container"),
-  );
+  const wheel = setupRouletteWheel(element.querySelector("#wheel-container"));
 
   const bettingTable = setupBettingTable(
     element.querySelector("#betting-container"),
@@ -52,7 +57,6 @@ export function setupRoulette(element) {
     const bets = bettingTable.getBets();
     if (bets.length === 0) return;
 
-    // 1. LOCK
     isSpinning = true;
     bettingTable.setDisabled(true);
     spinButton.setEnabled(false);
@@ -60,9 +64,8 @@ export function setupRoulette(element) {
     try {
       const data = await spinRoulette(bets);
 
-      await result.animateRoll(data.roll);
-
-      result.showResult(data);
+      await wheel.spinTo(data.winningNumber);
+      wheel.showResult(data);
 
       balance = balance + data.payout;
       header.setBalance(balance);

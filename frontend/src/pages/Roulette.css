@@ -1,138 +1,523 @@
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
 .roulette-page {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #1a1a1a;
-  border-radius: 12px;
+  /* tör ki a 1126px-es #app szülő konténerből és kitölti a teljes viewport-ot */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 100vh;
+  padding: 30px 50px;
+  box-sizing: border-box;
+  background: radial-gradient(ellipse at top, #1b3826 0%, #0d1f15 100%);
   color: #fff;
-  font-family: system-ui, sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
   text-align: left;
 }
 
 .roulette-page h1 {
   text-align: center;
-  color: #ffd700;
-  margin-bottom: 20px;
+  color: #d4af37;
+  margin: 0 0 30px 0;
+  font-family: Georgia, serif;
+  font-size: 44px;
+  letter-spacing: 4px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.roulette-page h2 {
+/* ============================================
+   GAME HEADER (back button + balance)
+   ============================================ */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1800px;
+  margin: 0 auto 20px;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: linear-gradient(180deg, #2a1a08 0%, #1a0d04 100%);
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  border-radius: 8px;
+  font-family: Georgia, serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(212, 175, 55, 0.2),
+    0 3px 8px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.12s ease;
+}
+
+.back-btn:hover {
+  background: linear-gradient(180deg, #3a2a14 0%, #2a1a08 100%);
+  transform: translateX(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(212, 175, 55, 0.3),
+    0 4px 12px rgba(212, 175, 55, 0.25);
+}
+
+.back-btn:active {
+  transform: translateX(-1px);
+}
+
+.balance-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px 10px 16px;
+  background: linear-gradient(180deg, #074a25 0%, #052f17 100%);
+  border: 2px solid #d4af37;
+  border-radius: 8px;
+  font-family: Georgia, serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #e8e8e8;
+  box-shadow:
+    inset 0 1px 0 rgba(212, 175, 55, 0.2),
+    0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.balance-display::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    #fffbea,
+    #d4af37 60%,
+    #8a6d2a
+  );
+  border: 2px dashed #5a3a1a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.balance-display #balance {
+  color: #d4af37;
+  font-size: 20px;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  margin-left: 2px;
+}
+
+.roulette-stage {
+  display: grid;
+  grid-template-columns: minmax(440px, 560px) 1fr;
+  gap: 40px;
+  align-items: start;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .roulette-stage {
+    grid-template-columns: 1fr;
+  }
+  .wheel-column {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+.wheel-column,
+.table-column {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* ============================================
+   WHEEL
+   ============================================ */
+.wheel-frame {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+  background: linear-gradient(145deg, #2a1a08, #1a0d04);
+  box-shadow:
+    0 0 0 4px #d4af37,
+    0 0 40px rgba(0, 0, 0, 0.7),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 22px solid #d4af37;
+  z-index: 10;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+}
+
+.wheel-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.wheel-rotation,
+.ball-rotation {
+  transform-origin: 200px 200px;
+  transform-box: view-box;
+}
+
+.ball-rotation circle {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
+}
+
+#wheel-result {
+  text-align: center;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   font-size: 18px;
-  margin-top: 25px;
-  margin-bottom: 10px;
-  color: #ccc;
 }
 
-.roulette-page p {
-  font-size: 18px;
-  margin-bottom: 20px;
+.res-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  color: #fff;
+  border: 2px solid #d4af37;
 }
 
-#balance {
+.res-red {
+  background: #c0392b;
+}
+.res-black {
+  background: #1a1a1a;
+}
+.res-green {
+  background: #0a7d3c;
+}
+
+.res-msg.win {
   color: #4ade80;
-  font-weight: bold;
+  font-weight: 600;
 }
 
-.betting-form {
+.res-msg.lose {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* ============================================
+   CHIP SELECTOR
+   ============================================ */
+.betting-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.betting-area.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.chip-selector {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 20px;
+  padding: 12px 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #2a4a30;
+  border-radius: 10px;
+  flex-wrap: wrap;
 }
 
-.roulette-page select,
-.roulette-page input[type="number"] {
-  padding: 10px;
-  background-color: #2a2a2a;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.roulette-page button {
-  padding: 10px 20px;
-  background-color: #3b82f6;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
+.chip {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px dashed rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+  font-size: 13px;
   cursor: pointer;
-  font-weight: 500;
+  font-family: Georgia, serif;
+  box-shadow:
+    inset 0 0 0 3px rgba(0, 0, 0, 0.15),
+    0 3px 6px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  padding: 0;
 }
 
-.roulette-page button:hover {
-  background-color: #2563eb;
+.chip:hover {
+  transform: translateY(-2px);
 }
 
-.roulette-page button:disabled {
-  background-color: #555;
+.chip.selected {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 0 0 3px rgba(0, 0, 0, 0.15),
+    0 0 0 3px #d4af37,
+    0 6px 12px rgba(212, 175, 55, 0.4);
+}
+
+.rebet-btn {
+  margin-left: auto;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #1f6b3a 0%, #154d29 100%);
+  color: #d4af37;
+  border: 1px solid #d4af37;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
+}
+
+.rebet-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #2a8a48 0%, #1a6131 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+}
+
+.rebet-btn:disabled {
+  background: #2a2a2a;
+  color: #666;
+  border-color: #444;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-#bets-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 20px 0;
+.clear-btn {
+  padding: 8px 14px;
+  background: #7f1d1d;
+  color: #fff;
+  border: 1px solid #b91c1c;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-#bets-ul li {
+.clear-btn:hover {
+  background: #991b1b;
+}
+
+/* ============================================
+   BETTING TABLE GRID
+   ============================================ */
+.table-grid {
+  display: grid;
+  grid-template-columns: 70px repeat(12, minmax(0, 1fr)) 60px;
+  grid-template-rows: 75px 75px 75px 50px 50px;
+  gap: 4px;
+  padding: 16px;
+  background: linear-gradient(180deg, #0a5c2e 0%, #074a25 100%);
+  border: 3px solid #d4af37;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.4),
+    0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.bet-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+  font-weight: 700;
+  color: #fff;
+  font-family: Georgia, serif;
+}
+
+.bet-cell:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 0 2px #d4af37, 0 0 10px rgba(212, 175, 55, 0.5);
+  z-index: 2;
+}
+
+.cell-label {
+  font-size: 22px;
+  pointer-events: none;
+}
+
+.outside-cell .cell-label {
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.col-bet .cell-label {
+  font-size: 13px;
+}
+
+/* Number cells */
+.num-cell.red {
+  background: #c0392b;
+}
+.num-cell.black {
+  background: #1a1a1a;
+}
+.num-cell.zero {
+  background: #0a7d3c;
+}
+.num-cell.zero .cell-label {
+  font-size: 36px;
+}
+
+/* Outside cells */
+.outside-cell {
+  background: rgba(0, 0, 0, 0.25);
+}
+.outside-cell.red-bg {
+  background: #c0392b;
+}
+.outside-cell.black-bg {
+  background: #1a1a1a;
+}
+.outside-cell.col-bet {
+  background: rgba(0, 0, 0, 0.3);
+}
+.outside-cell.dozen {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Chip on cell */
+.chip-stack {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.bet-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fffbea, #d4af37 60%, #8a6d2a);
+  color: #2c1a00;
+  border: 2px dashed #5a3a1a;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+  font-family: system-ui, sans-serif;
+}
+
+.bet-cell.has-bet {
+  box-shadow: 0 0 0 2px #d4af37 inset;
+}
+
+/* ============================================
+   BET SUMMARY + SPIN BUTTON
+   ============================================ */
+.bet-summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  background-color: #2a2a2a;
-  border-radius: 6px;
-  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #2a4a30;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #bbb;
 }
 
-#bets-ul li button {
-  padding: 4px 10px;
-  background-color: #dc2626;
-  font-size: 12px;
-}
-
-#bets-ul li button:hover {
-  background-color: #b91c1c;
+.bet-summary strong {
+  color: #d4af37;
+  font-size: 16px;
 }
 
 #spin-btn {
-  display: block;
   width: 100%;
-  padding: 15px;
-  background-color: #16a34a;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 20px;
+  padding: 16px;
+  background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+  color: #fff;
+  border: 2px solid #d4af37;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  font-family: Georgia, serif;
 }
 
 #spin-btn:hover:not(:disabled) {
-  background-color: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.5);
 }
 
-#result {
-  margin-top: 20px;
-  padding: 20px;
-  text-align: center;
-  font-size: 18px;
-  min-height: 40px;
+#spin-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
-.current-number-display {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 120px;
-  background-color: #2a2a2a;
-  border: 3px solid #ffd700;
-  border-radius: 12px;
-  margin: 20px 0;
+#spin-btn:disabled {
+  background: #3a4a3a;
+  color: #888;
+  border-color: #555;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-#current-number {
-  font-size: 64px;
-  font-weight: bold;
-  color: #ffd700;
-  font-family: "Courier New", monospace;
+/* Disable text-selection while spinning */
+.betting-area.disabled .bet-cell,
+.betting-area.disabled .chip {
+  cursor: not-allowed;
 }
