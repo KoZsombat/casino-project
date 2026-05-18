@@ -6,9 +6,9 @@
   --bj-felt-darker: #082a18;
   --bj-wood: #2a1808;
   --bj-wood-dark: #1a0d04;
-  --bj-gold: #d4a04a;
-  --bj-gold-soft: #b8862e;
-  --bj-gold-bright: #f0c674;
+  --bj-gold: #d4af37;
+  --bj-gold-soft: #b8962e;
+  --bj-gold-bright: #f0d474;
   --bj-text: #f5e9c8;
   --bj-text-dim: #c9b98a;
   --bj-red: #c0392b;
@@ -49,7 +49,7 @@ body {
   font-family: var(--bj-serif);
   background:
     radial-gradient(
-        ellipse 96% 88% at 50% 46%,
+        ellipse 82% 70% at 50% 58%,
         var(--bj-felt-light) 0%,
         var(--bj-felt) 28%,
         var(--bj-felt-deep) 62%,
@@ -64,8 +64,8 @@ body {
 .blackjack-page::before {
   content: "";
   position: absolute;
-  inset: 14px;
-  border: 2px solid rgba(212, 160, 74, 0.55);
+  inset: 100px 60px 30px;
+  border: 2px solid rgba(212, 175, 55, 0.55);
   border-radius: 50% / 30%;
   pointer-events: none;
 }
@@ -73,8 +73,8 @@ body {
 .blackjack-page::after {
   content: "";
   position: absolute;
-  inset: 22px;
-  border: 1px solid rgba(212, 160, 74, 0.25);
+  inset: 108px 68px 38px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 50% / 30%;
   pointer-events: none;
 }
@@ -91,7 +91,7 @@ body {
   font-weight: 500;
   letter-spacing: 6px;
   text-align: center;
-  margin: 4px 0 8px;
+  margin: 22px 0 8px;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
@@ -108,30 +108,50 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 22px;
-  background: linear-gradient(180deg, var(--bj-felt-deep) 0%, var(--bj-felt-darker) 100%);
-  border: 2px solid var(--bj-gold);
-  border-radius: 10px;
-  box-shadow: var(--bj-shadow), inset 0 0 18px rgba(0, 0, 0, 0.4);
-  margin-bottom: 10px;
+  max-width: 1800px;
+  margin: 0 auto 20px;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .back-btn {
-  background: transparent;
-  border: 2px solid var(--bj-gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: linear-gradient(180deg, var(--bj-wood) 0%, var(--bj-wood-dark) 100%);
   color: var(--bj-gold);
+  border: 2px solid var(--bj-gold);
+  border-radius: 8px;
   font-family: var(--bj-serif);
-  font-size: 16px;
-  font-weight: 500;
-  padding: 8px 22px;
-  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  box-shadow:
+    inset 0 1px 0 rgba(212, 175, 55, 0.2),
+    0 3px 8px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.12s ease;
 }
 
 .back-btn:hover {
-  background: rgba(212, 160, 74, 0.12);
-  color: var(--bj-gold-bright);
+  background: linear-gradient(180deg, #3a2a14 0%, var(--bj-wood) 100%);
+  transform: translateX(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(212, 175, 55, 0.3),
+    0 4px 12px rgba(212, 175, 55, 0.25);
+}
+
+.back-btn:active {
+  transform: translateX(-1px);
 }
 
 .balance-display {
@@ -139,12 +159,15 @@ body {
   align-items: center;
   gap: 12px;
   background: var(--bj-felt-darker);
-  border: 2px solid var(--bj-gold);
+  border: 2px solid rgba(212, 175, 55, 0.6);
   border-radius: 8px;
   padding: 8px 18px;
   color: var(--bj-text);
   font-size: 16px;
   font-family: var(--bj-serif);
+  box-shadow:
+    inset 0 0 10px rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .balance-display::before {
@@ -155,7 +178,7 @@ body {
   flex-shrink: 0;
   border-radius: 50%;
   background:
-    radial-gradient(circle, #d4a04a 0 5px, transparent 5.5px),
+    radial-gradient(circle, #d4af37 0 5px, transparent 5.5px),
     radial-gradient(
       circle,
       transparent 0 8px,
@@ -202,11 +225,11 @@ body {
   width: 70%;
   max-width: 720px;
   height: 1px;
-  margin: 6px auto 12px;
+  margin: 6px auto 50px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(212, 160, 74, 0.5) 50%,
+    rgba(212, 175, 55, 0.5) 50%,
     transparent 100%
   );
 }
@@ -216,7 +239,7 @@ body {
   padding: 12px 18px 14px;
   max-width: 900px;
   background: rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(212, 160, 74, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 10px;
   text-align: center;
 }
@@ -229,7 +252,7 @@ body {
 
 .player-hand.split-active {
   border-color: var(--bj-gold);
-  box-shadow: 0 0 0 2px rgba(212, 160, 74, 0.25), inset 0 0 20px rgba(212, 160, 74, 0.08);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25), inset 0 0 20px rgba(212, 175, 55, 0.08);
 }
 
 .player-hand.split-done {
@@ -452,7 +475,7 @@ body {
   background: rgba(0, 0, 0, 0.45);
   padding: 2px 8px;
   border-radius: 6px;
-  border: 1px solid rgba(212, 160, 74, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.4);
 }
 
 .deck-shoe-count {
@@ -622,7 +645,7 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  background: radial-gradient(circle at center, rgba(212, 160, 74, 0.06), transparent 70%);
+  background: radial-gradient(circle at center, rgba(212, 175, 55, 0.06), transparent 70%);
 }
 
 .bet-spot-chips {
@@ -761,7 +784,7 @@ body {
 .round-result .hand-result {
   padding: 6px 12px;
   margin: 4px 0;
-  border-top: 1px dashed rgba(212, 160, 74, 0.25);
+  border-top: 1px dashed rgba(212, 175, 55, 0.25);
   font-size: 15px;
 }
 
