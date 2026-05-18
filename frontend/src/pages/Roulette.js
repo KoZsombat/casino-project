@@ -1,9 +1,9 @@
 import "./Roulette.css";
 import { spinRoulette } from "../api/roulette.js";
 import { setupGameHeader } from "../components/GameHeader.js";
-import { setupBettingTable } from "../components/BettingTable.js";
-import { setupSpinButton } from "../components/Spinbutton.js";
-import { setupRouletteResult } from "../components/RouletteResult.js";
+import { setupBettingTable } from "../components/roulette/BettingTable.js";
+import { setupSpinButton } from "../components/roulette/SpinButton.js";
+import { setupRouletteResult } from "../components/roulette/RouletteResult.js";
 import showAlert from "../components/showAlert.js";
 
 export function setupRoulette(element) {
