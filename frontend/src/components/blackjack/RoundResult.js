@@ -4,7 +4,7 @@ export function setupRoundResult(element, options) {
       <h2 id="result-text"></h2>
       <div id="result-details"></div>
       <p id="payout-text"></p>
-      <button id="new-round-btn">Új kör</button>
+      <button id="new-round-btn">New Round</button>
     </div>
   `;
 
@@ -22,11 +22,11 @@ export function setupRoundResult(element, options) {
   function labelFor(result) {
     switch (result) {
       case "player_wins":
-        return { text: "Nyertél!", color: "#4ade80" };
+        return { text: "You won!", color: "#4ade80" };
       case "dealer_wins":
-        return { text: "A dealer nyert", color: "#ef4444" };
-      case "tie":
-        return { text: "Döntetlen", color: "#facc15" };
+        return { text: "Dealer wins", color: "#ef4444" };
+      case "push":
+        return { text: "Push", color: "#facc15" };
       default:
         return { text: "", color: "#fff" };
     }
@@ -38,20 +38,17 @@ export function setupRoundResult(element, options) {
 
       if (Array.isArray(data.hands) && data.hands.length > 1) {
         const wins = data.hands.filter((h) => h.result === "player_wins").length;
-        const losses = data.hands.filter(
-          (h) => h.result === "dealer_wins",
-        ).length;
+        const losses = data.hands.filter((h) => h.result === "dealer_wins").length;
 
-        let summary;
-        let color;
+        let summary, color;
         if (wins > losses) {
-          summary = "Összességében nyertél!";
+          summary = "Overall you won!";
           color = "#4ade80";
         } else if (losses > wins) {
-          summary = "Összességében veszítettél";
+          summary = "Overall you lost";
           color = "#ef4444";
         } else {
-          summary = "Vegyes eredmény";
+          summary = "Mixed result";
           color = "#facc15";
         }
 
@@ -62,9 +59,9 @@ export function setupRoundResult(element, options) {
           const info = labelFor(hand.result);
           const row = document.createElement("div");
           row.className = "hand-result";
-          row.innerHTML = `<strong>Kéz ${index + 1}:</strong>
+          row.innerHTML = `<strong>Hand ${index + 1}:</strong>
             <span style="color:${info.color}">${info.text}</span>
-            — Tét: ${hand.bet} Ft, Kifizetés: ${hand.payout} Ft`;
+            — Bet: $${hand.bet}, Payout: $${hand.payout}`;
           resultDetailsEl.appendChild(row);
         });
       } else {
@@ -73,10 +70,8 @@ export function setupRoundResult(element, options) {
         resultTextEl.style.color = info.color;
       }
 
-      const totalPayout =
-        data.totalPayout !== undefined ? data.totalPayout : data.payout || 0;
-      payoutTextEl.textContent =
-        totalPayout > 0 ? `Összes kifizetés: ${totalPayout} Ft` : "";
+      const totalPayout = data.totalPayout !== undefined ? data.totalPayout : data.payout || 0;
+      payoutTextEl.textContent = totalPayout > 0 ? `Total payout: $${totalPayout}` : "";
 
       element.style.display = "block";
     },

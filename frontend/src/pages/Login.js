@@ -1,4 +1,3 @@
-// src/pages/Login.js
 import "./Login.css";
 import {
   renderAuthShell,
@@ -21,18 +20,18 @@ export function setupLogin(element, options = {}) {
   formSlot.innerHTML = `
     <form class="auth-form" id="loginForm" novalidate>
       <div class="field">
-        <label for="username">Felhasználónév</label>
-        <input id="username" name="username" type="text" placeholder="pl. lucky_player" autocomplete="username" required />
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" placeholder="e.g. lucky_player" autocomplete="username" required />
         <span class="field-error" id="usernameError"></span>
       </div>
 
       <div class="field">
-        <label for="password">Jelszó</label>
+        <label for="password">Password</label>
         <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required minlength="6" />
         <span class="field-error" id="passwordError"></span>
       </div>
 
-      <button class="btn-submit" type="submit" id="submitBtn">Bejelentkezés</button>
+      <button class="btn-submit" type="submit" id="submitBtn">Login</button>
     </form>
   `;
 
@@ -65,29 +64,21 @@ export function setupLogin(element, options = {}) {
 
     let hasError = false;
     if (!username) {
-      setFieldError(
-        usernameInput,
-        usernameErr,
-        "A felhasználónév megadása kötelező.",
-      );
+      setFieldError(usernameInput, usernameErr, "Username is required.");
       hasError = true;
     }
     if (!password) {
-      setFieldError(passwordInput, passwordErr, "A jelszó megadása kötelező.");
+      setFieldError(passwordInput, passwordErr, "Password is required.");
       hasError = true;
     } else if (password.length < 6) {
-      setFieldError(
-        passwordInput,
-        passwordErr,
-        "A jelszónak legalább 6 karakterből kell állnia.",
-      );
+      setFieldError(passwordInput, passwordErr, "Password must be at least 6 characters.");
       hasError = true;
     }
 
     if (hasError) return;
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "Belépés...";
+    submitBtn.textContent = "Logging in...";
 
     try {
       const res = await globalThis.fetch(`${API_URL}/api/auth/login`, {
@@ -106,18 +97,15 @@ export function setupLogin(element, options = {}) {
       const msg =
         data?.error ||
         (res.status === 401
-          ? "Hibás felhasználónév vagy jelszó."
-          : "Sikertelen bejelentkezés.");
+          ? "Invalid username or password."
+          : "Login failed.");
       showFormError(errorBox, msg);
     } catch (err) {
       console.error(err);
-      showFormError(
-        errorBox,
-        "Nem sikerült elérni a szervert. Próbáld újra később.",
-      );
+      showFormError(errorBox, "Could not reach the server. Please try again later.");
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Bejelentkezés";
+      submitBtn.textContent = "Login";
     }
   });
 }

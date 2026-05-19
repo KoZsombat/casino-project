@@ -1,7 +1,3 @@
-// src/components/auth/authShell.js
-// Shared wireframe for Login and Register pages: navbar, floating bg,
-// card with title/tabs, form slot, footnote, footer.
-
 export function renderAuthShell(element, { mode, navigate, onBack }) {
   const isLogin = mode === "login";
 
@@ -13,42 +9,42 @@ export function renderAuthShell(element, { mode, navigate, onBack }) {
       <header class="casino-navbar">
         <button class="nav-logo" id="navLogo">🎰 CASINO</button>
         <div class="nav-actions">
-          <button class="btn btn-back" id="backBtn">← Vissza</button>
+          <button class="btn btn-back" id="backBtn">← Back</button>
         </div>
       </header>
 
       <main class="auth-main">
         <div class="auth-card">
-          <h1 class="auth-title">${isLogin ? "Bejelentkezés" : "Regisztráció"}</h1>
+          <h1 class="auth-title">${isLogin ? "Login" : "Register"}</h1>
           <p class="auth-subtitle">${
             isLogin
-              ? "Üdvözlünk újra az asztalnál!"
-              : "Csatlakozz, és 1.000 Ft kezdő egyenleget kapsz!"
+              ? "Welcome back to the table!"
+              : "Join and get $1,000 starting balance!"
           }</p>
 
           <div class="auth-tabs" role="tablist">
-            <button class="auth-tab ${isLogin ? "active" : ""}" data-target="/login" role="tab">Bejelentkezés</button>
-            <button class="auth-tab ${isLogin ? "" : "active"}" data-target="/register" role="tab">Regisztráció</button>
+            <button class="auth-tab ${isLogin ? "active" : ""}" data-target="/login" role="tab">Login</button>
+            <button class="auth-tab ${isLogin ? "" : "active"}" data-target="/register" role="tab">Register</button>
           </div>
 
           <div class="form-error" id="formError"></div>
 
           <div id="authFormSlot"></div>
 
-          <div class="auth-divider">VAGY</div>
+          <div class="auth-divider">OR</div>
 
           <p class="auth-footnote">
             ${
               isLogin
-                ? 'Még nincs fiókod? <button type="button" id="switchModeBtn">Regisztrálj most</button>'
-                : 'Már van fiókod? <button type="button" id="switchModeBtn">Jelentkezz be</button>'
+                ? 'Don\'t have an account? <button type="button" id="switchModeBtn">Register now</button>'
+                : 'Already have an account? <button type="button" id="switchModeBtn">Log in</button>'
             }
           </p>
         </div>
       </main>
 
       <footer class="casino-footer">
-        <p>⚠️ 18+ | Játssz felelősséggel! A játékok kizárólag virtuális egyenleggel működnek.</p>
+        <p>⚠️ 18+ | Play responsibly! Games use virtual balance only.</p>
       </footer>
 
     </div>

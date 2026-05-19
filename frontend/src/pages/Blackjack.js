@@ -61,9 +61,10 @@ export function setupBlackjack(element, options = {}) {
   });
 
   fetchBalance().then((bal) => {
-    if (bal !== null) {
+    if (bal != null) {
       balance = bal;
       header.setBalance(balance);
+      betControls.refreshChips();
     }
   });
 
@@ -166,8 +167,8 @@ export function setupBlackjack(element, options = {}) {
         refreshActionButtons();
       }
     } catch (err) {
-      console.error("Hiba a kör indításakor:", err);
-      showAlert(err.message === "Not Enough Balance" ? "Nincs elég egyenleged!" : "Hiba történt! Próbáld újra.");
+      console.error("Error starting round:", err);
+      showAlert(err.message === "Not Enough Balance" ? "Insufficient balance!" : "An error occurred. Please try again.");
       balance += bet;
       header.setBalance(balance);
       betControls.show();
@@ -191,8 +192,8 @@ export function setupBlackjack(element, options = {}) {
         refreshActionButtons();
       }
     } catch (err) {
-      console.error("Hiba hit közben:", err);
-      showAlert("Hiba történt!");
+      console.error("Error on hit:", err);
+      showAlert("An error occurred!");
       refreshActionButtons();
     }
   }
@@ -231,8 +232,8 @@ export function setupBlackjack(element, options = {}) {
         totalPayout: data.payout,
       });
     } catch (err) {
-      console.error("Hiba a kör befejezésekor:", err);
-      showAlert("Hiba történt a kör lezárásakor!");
+      console.error("Error ending round:", err);
+      showAlert("An error occurred while ending the round!");
       betControls.show();
     }
   }

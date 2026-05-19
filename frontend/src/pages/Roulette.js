@@ -8,13 +8,14 @@ import { setupRouletteWheel } from "../components/roulette/RouletteWheel.js";
 import showAlert from "../components/showAlert.js";
 
 export function setupRoulette(element, options = {}) {
-  let balance = 0;
+  let balance = 0;        // effective balance used for chip validation
+  let startingBalance = 0; // balance at start of each betting round (shown in header)
   let isSpinning = false;
 
   element.innerHTML = `
     <div class="roulette-page">
       <div id="header-container"></div>
-      <h1>Rulett</h1>
+      <h1>Roulette</h1>
 
       <div class="roulette-stage">
         <div class="wheel-column">
@@ -29,16 +30,17 @@ export function setupRoulette(element, options = {}) {
   `;
 
   const header = setupGameHeader(element.querySelector("#header-container"), {
-    initialBalance: balance,
+    initialBalance: 0,
     onBack: () => {
       if (options.onBack) options.onBack();
     },
   });
 
   fetchBalance().then((bal) => {
-    if (bal !== null) {
+    if (bal != null) {
       balance = bal;
-      header.setBalance(balance);
+      startingBalance = bal;
+      header.setBalance(bal);
     }
   });
 
@@ -50,7 +52,9 @@ export function setupRoulette(element, options = {}) {
       getBalance: () => balance,
       onBetsChange: (bets, costDelta) => {
         balance = balance + costDelta;
-        header.setBalance(balance);
+        const totalBet = startingBalance - balance;
+        header.setBalance(startingBalance);
+        header.setTotalBet(totalBet);
         spinButton.setEnabled(bets.length > 0 && !isSpinning);
       },
     },
@@ -75,12 +79,16 @@ export function setupRoulette(element, options = {}) {
       wheel.showResult(data);
 
       balance = data.newBalance;
-      header.setBalance(balance);
+      startingBalance = data.newBalance;
+      header.setBalance(data.newBalance);
+      header.setTotalBet(0);
 
       bettingTable.clear();
     } catch (err) {
-      console.error("Hiba a pörgetés közben:", err);
-      showAlert("Hiba történt a pörgetés közben!");
+      console.error("Error during spin:", err);
+      balance = startingBalance;
+      header.setTotalBet(0);
+      showAlert("An error occurred during spin. Please try again.");
     } finally {
       isSpinning = false;
       bettingTable.setDisabled(false);
