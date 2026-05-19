@@ -1,11 +1,13 @@
 import { setupHome } from './pages/Home.js';
 import { setupBlackjack } from './pages/Blackjack.js';
 import { setupRoulette } from './pages/Roulette.js';
+import { setupSlotMachine } from './pages/Slotmachine.js';
 
 const routes = {
   '/': setupHome,
   '/blackjack': setupBlackjack,
   '/roulette': setupRoulette,
+  '/slot': setupSlotMachine,
 };
 
 export function createRouter(element) {
