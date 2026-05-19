@@ -10,14 +10,14 @@ const blackjackGames = new Map();
 const gameTimers = new Map();
 
 function clearGame(token) {
-  clearTimeout(gameTimers.get(token));
+  globalThis.clearTimeout(gameTimers.get(token));
   gameTimers.delete(token);
   blackjackGames.delete(token);
 }
 
 function scheduleExpiry(token) {
-  clearTimeout(gameTimers.get(token));
-  const timer = setTimeout(() => clearGame(token), GAME_TIMEOUT_MS);
+  globalThis.clearTimeout(gameTimers.get(token));
+  const timer = globalThis.setTimeout(() => clearGame(token), GAME_TIMEOUT_MS);
   gameTimers.set(token, timer);
 }
 

@@ -98,7 +98,7 @@ async function loadBalance(element) {
           authBtn.disabled = true;
           try {
             await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
-          } catch {}
+          } catch (_) {}
           if (balanceEl) balanceEl.innerText = "$0";
           authBtn.textContent = "Login";
           authBtn.disabled = false;
@@ -111,7 +111,7 @@ async function loadBalance(element) {
         authBtn.onclick = () => { window.location.hash = "#/login"; };
       }
     }
-  } catch {
+  } catch (_) {
     if (authBtn) {
       authBtn.textContent = "Login";
       authBtn.onclick = () => { window.location.hash = "#/login"; };

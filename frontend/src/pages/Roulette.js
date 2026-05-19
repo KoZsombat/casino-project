@@ -86,8 +86,6 @@ export function setupRoulette(element, options = {}) {
       bettingTable.clear();
     } catch (err) {
       console.error("Error during spin:", err);
-      // Refund the bets back to effective balance on error
-      const refund = startingBalance - balance;
       balance = startingBalance;
       header.setTotalBet(0);
       showAlert("An error occurred during spin. Please try again.");
