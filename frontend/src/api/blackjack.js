@@ -1,61 +1,4 @@
-const RANKS = [
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "J",
-  "Q",
-  "K",
-  "A",
-];
-const SUITS = ["♠", "♥", "♦", "♣"];
-
-const NUM_DECKS = 2;
-const RESHUFFLE_AT = 26;
-
-let shoe = [];
-
-function buildShoe(numDecks = NUM_DECKS) {
-  const cards = [];
-  for (let d = 0; d < numDecks; d++) {
-    for (const r of RANKS) {
-      for (const s of SUITS) {
-        cards.push(r + s);
-      }
-    }
-  }
-  for (let i = cards.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [cards[i], cards[j]] = [cards[j], cards[i]];
-  }
-  return cards;
-}
-
-function ensureShoe() {
-  if (shoe.length <= RESHUFFLE_AT) {
-    shoe = buildShoe();
-  }
-}
-
-function drawCard() {
-  ensureShoe();
-  return shoe.pop();
-}
-
-export function getCardsRemaining() {
-  ensureShoe();
-  return shoe.length;
-}
-
-export function getDeckCount() {
-  return NUM_DECKS;
-}
-
+// Score utilities still needed for UI rendering during the game
 function getRank(card) {
   return card.slice(0, -1);
 }
@@ -82,60 +25,37 @@ export function calculateScore(cards) {
   return score;
 }
 
-export function canSplit(cards) {
-  if (!cards || cards.length !== 2) return false;
-  return getCardValue(cards[0]) === getCardValue(cards[1]);
-}
+async function post(path, body) {
+  const res = await fetch(path, {
+    method: "POST",
+    credentials: "include",
+    headers: body ? { "Content-Type": "application/json" } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  });
 
-export function isPairOfAces(cards) {
-  return (
-    cards &&
-    cards.length === 2 &&
-    getRank(cards[0]) === "A" &&
-    getRank(cards[1]) === "A"
-  );
-}
-
-async function delay(ms = 200) {
-  await new Promise((resolve) => globalThis.setTimeout(resolve, ms));
-}
-
-export async function startBlackjack() {
-  await delay();
-
-  const playerCards = [drawCard(), drawCard()];
-  const dealerFirstCard = drawCard();
-  const dealerHiddenCard = drawCard();
-
-  return {
-    playerCards,
-    dealerCards: [dealerFirstCard, "?"],
-    playerScore: calculateScore(playerCards),
-    dealerScore: getCardValue(dealerFirstCard),
-    _hiddenCard: dealerHiddenCard,
-  };
-}
-
-export async function drawForHand(cards) {
-  await delay();
-  const newCard = drawCard();
-  const nextCards = [...cards, newCard];
-  return {
-    newCard,
-    cards: nextCards,
-    score: calculateScore(nextCards),
-  };
-}
-
-export function settleHand(playerScore, dealerScore, bet) {
-  if (playerScore > 21) {
-    return { result: "dealer_wins", payout: 0 };
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error ?? `Server error ${res.status}`);
   }
-  if (dealerScore > 21 || playerScore > dealerScore) {
-    return { result: "player_wins", payout: bet * 2 };
-  }
-  if (playerScore < dealerScore) {
-    return { result: "dealer_wins", payout: 0 };
-  }
-  return { result: "tie", payout: bet };
+
+  return res.json();
+}
+
+export async function startBlackjack(bet) {
+  return post("/api/games/blackjack/start", { bet });
+}
+
+export async function hitBlackjack() {
+  return post("/api/games/blackjack/hit");
+}
+
+export async function standBlackjack() {
+  return post("/api/games/blackjack/stand");
+}
+
+export async function fetchBalance() {
+  const res = await fetch("/api/user/balance", { credentials: "include" });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.balance;
 }

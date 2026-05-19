@@ -1,5 +1,6 @@
 import "./Roulette.css";
 import { spinRoulette } from "../api/roulette.js";
+import { fetchBalance } from "../api/blackjack.js";
 import { setupGameHeader } from "../components/GameHeader.js";
 import { setupBettingTable } from "../components/roulette/BettingTable.js";
 import { setupSpinButton } from "../components/roulette/Spinbutton.js";
@@ -7,7 +8,7 @@ import { setupRouletteWheel } from "../components/roulette/RouletteWheel.js";
 import showAlert from "../components/showAlert.js";
 
 export function setupRoulette(element, options = {}) {
-  let balance = 1000;
+  let balance = 0;
   let isSpinning = false;
 
   element.innerHTML = `
@@ -32,6 +33,13 @@ export function setupRoulette(element, options = {}) {
     onBack: () => {
       if (options.onBack) options.onBack();
     },
+  });
+
+  fetchBalance().then((bal) => {
+    if (bal !== null) {
+      balance = bal;
+      header.setBalance(balance);
+    }
   });
 
   const wheel = setupRouletteWheel(element.querySelector("#wheel-container"));
@@ -66,7 +74,7 @@ export function setupRoulette(element, options = {}) {
       await wheel.spinTo(data.winningNumber);
       wheel.showResult(data);
 
-      balance = balance + data.payout;
+      balance = data.newBalance;
       header.setBalance(balance);
 
       bettingTable.clear();
