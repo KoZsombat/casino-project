@@ -57,5 +57,5 @@ export async function fetchBalance() {
   const res = await fetch("/api/user/balance", { credentials: "include" });
   if (!res.ok) return null;
   const data = await res.json();
-  return data.balance;
+  return parseFloat(data.balance);
 }

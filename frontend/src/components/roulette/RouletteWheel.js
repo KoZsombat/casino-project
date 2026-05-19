@@ -1,4 +1,3 @@
-// Európai rulett pocket-sorrend (0-tól óramutató járásával)
 const EUROPEAN_ORDER = [
   0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24,
   16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
@@ -48,8 +47,7 @@ function buildSlices(cx, cy, outerR, innerR, textR) {
 }
 
 export function setupRouletteWheel(element) {
-  const cx = 200,
-    cy = 200;
+  const cx = 200, cy = 200;
   const outerR = 185;
   const innerR = 115;
   const textR = 150;
@@ -59,29 +57,23 @@ export function setupRouletteWheel(element) {
     <div class="wheel-frame">
       <div class="wheel-pointer"></div>
       <svg class="wheel-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-        <!-- külső arany gyűrű -->
         <circle cx="${cx}" cy="${cy}" r="195" fill="#3a2a14" stroke="#d4af37" stroke-width="3"/>
         <circle cx="${cx}" cy="${cy}" r="190" fill="none" stroke="#8a6d2a" stroke-width="1"/>
 
-        <!-- forgó kerék (számok) -->
         <g class="wheel-rotation">
           ${buildSlices(cx, cy, outerR, innerR, textR)}
-          <!-- belső barna fa -->
           <circle cx="${cx}" cy="${cy}" r="${innerR}" fill="#5a3a1a" stroke="#d4af37" stroke-width="2"/>
           <circle cx="${cx}" cy="${cy}" r="${innerR - 8}" fill="none" stroke="#8a6d2a" stroke-width="1"/>
-          <!-- 8 küllős mintázat -->
           <g stroke="#d4af37" stroke-width="1.5" opacity="0.7">
             <line x1="${cx}" y1="${cy - innerR + 10}" x2="${cx}" y2="${cy + innerR - 10}"/>
             <line x1="${cx - innerR + 10}" y1="${cy}" x2="${cx + innerR - 10}" y2="${cy}"/>
             <line x1="${cx - (innerR - 10) * 0.707}" y1="${cy - (innerR - 10) * 0.707}" x2="${cx + (innerR - 10) * 0.707}" y2="${cy + (innerR - 10) * 0.707}"/>
             <line x1="${cx + (innerR - 10) * 0.707}" y1="${cy - (innerR - 10) * 0.707}" x2="${cx - (innerR - 10) * 0.707}" y2="${cy + (innerR - 10) * 0.707}"/>
           </g>
-          <!-- középső gomb -->
           <circle cx="${cx}" cy="${cy}" r="22" fill="#d4af37" stroke="#8a6d2a" stroke-width="2"/>
           <circle cx="${cx}" cy="${cy}" r="14" fill="#8a6d2a"/>
         </g>
 
-        <!-- golyó pálya -->
         <g class="ball-rotation">
           <circle cx="${cx}" cy="${cy - ballOrbitR}" r="7" fill="#fafafa" stroke="#888" stroke-width="0.5">
             <title>ball</title>
@@ -99,7 +91,6 @@ export function setupRouletteWheel(element) {
 
   let wheelAngle = 0;
   let ballAngle = 0;
-  // lassú folyamatos forgás amíg nincs pörgetés
   let idleRaf = null;
   let idleStart = null;
 
@@ -112,7 +103,7 @@ export function setupRouletteWheel(element) {
       const dt = (t - idleStart) / 1000;
       wheelG.style.transition = "none";
       ballG.style.transition = "none";
-      wheelAngle = baseWheel + dt * 6; // 6°/s
+      wheelAngle = baseWheel + dt * 6;
       ballAngle = baseBall - dt * 10;
       wheelG.style.transform = `rotate(${wheelAngle}deg)`;
       ballG.style.transform = `rotate(${ballAngle}deg)`;
@@ -134,17 +125,15 @@ export function setupRouletteWheel(element) {
     const winIndex = EUROPEAN_ORDER.indexOf(winningNumber);
     const pocketCenter = (winIndex + 0.5) * SLICE;
 
-    // Kerék: 5 teljes körforgás előre + landolás úgy, hogy a nyerőszám felül legyen
     const baseForward = 5 * 360;
     const targetMod = ((-pocketCenter) % 360 + 360) % 360;
     let newWheel = wheelAngle + baseForward;
     const curMod = ((newWheel % 360) + 360) % 360;
     newWheel += ((targetMod - curMod) + 360) % 360;
 
-    // Golyó: 8 körforgás visszafelé, és landoljon a felső pont fölött (a kerék felfelé hozza a nyerő számot)
     let newBall = ballAngle - 8 * 360;
     const curBallMod = ((newBall % 360) + 360) % 360;
-    newBall -= curBallMod; // hogy 0° legyen mod 360
+    newBall -= curBallMod;
 
     const easing = "cubic-bezier(0.17, 0.67, 0.21, 1)";
     wheelG.style.transition = `transform ${SPIN_MS}ms ${easing}`;
@@ -160,12 +149,11 @@ export function setupRouletteWheel(element) {
 
   function showResult(data) {
     const num = data.winningNumber;
-    const color =
-      num === 0 ? "green" : RED_NUMBERS.includes(num) ? "red" : "black";
+    const color = num === 0 ? "green" : RED_NUMBERS.includes(num) ? "red" : "black";
     if (data.win) {
-      resultEl.innerHTML = `<span class="res-num res-${color}">${num}</span> <span class="res-msg win">🎉 Nyertél! +${data.payout} Ft</span>`;
+      resultEl.innerHTML = `<span class="res-num res-${color}">${num}</span> <span class="res-msg win">🎉 You won! +$${data.payout}</span>`;
     } else {
-      resultEl.innerHTML = `<span class="res-num res-${color}">${num}</span> <span class="res-msg lose">😢 Vesztettél</span>`;
+      resultEl.innerHTML = `<span class="res-num res-${color}">${num}</span> <span class="res-msg lose">😢 You lost</span>`;
     }
   }
 
@@ -176,9 +164,5 @@ export function setupRouletteWheel(element) {
 
   startIdle();
 
-  return {
-    spinTo,
-    showResult,
-    reset,
-  };
+  return { spinTo, showResult, reset };
 }

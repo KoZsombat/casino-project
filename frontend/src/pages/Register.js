@@ -1,4 +1,3 @@
-// src/pages/Register.js
 import "./Login.css";
 import {
   renderAuthShell,
@@ -22,30 +21,30 @@ export function setupRegister(element, options = {}) {
   formSlot.innerHTML = `
     <form class="auth-form" id="registerForm" novalidate>
       <div class="field">
-        <label for="username">Felhasználónév</label>
-        <input id="username" name="username" type="text" placeholder="pl. lucky_player" autocomplete="username" required />
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" placeholder="e.g. lucky_player" autocomplete="username" required />
         <span class="field-error" id="usernameError"></span>
       </div>
 
       <div class="field">
-        <label for="email">E-mail</label>
-        <input id="email" name="email" type="email" placeholder="te@example.com" autocomplete="email" required />
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
         <span class="field-error" id="emailError"></span>
       </div>
 
       <div class="field">
-        <label for="password">Jelszó</label>
-        <input id="password" name="password" type="password" placeholder="legalább 6 karakter" autocomplete="new-password" required minlength="6" />
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="at least 6 characters" autocomplete="new-password" required minlength="6" />
         <span class="field-error" id="passwordError"></span>
       </div>
 
       <div class="field">
-        <label for="confirmPassword">Jelszó megerősítése</label>
+        <label for="confirmPassword">Confirm Password</label>
         <input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" autocomplete="new-password" required />
         <span class="field-error" id="confirmPasswordError"></span>
       </div>
 
-      <button class="btn-submit" type="submit" id="submitBtn">Regisztráció</button>
+      <button class="btn-submit" type="submit" id="submitBtn">Register</button>
     </form>
   `;
 
@@ -86,47 +85,35 @@ export function setupRegister(element, options = {}) {
 
     let hasError = false;
     if (!username) {
-      setFieldError(
-        usernameInput,
-        usernameErr,
-        "A felhasználónév megadása kötelező.",
-      );
+      setFieldError(usernameInput, usernameErr, "Username is required.");
       hasError = true;
     }
     if (!email) {
-      setFieldError(emailInput, emailErr, "Az e-mail cím megadása kötelező.");
+      setFieldError(emailInput, emailErr, "Email address is required.");
       hasError = true;
     } else if (!EMAIL_RE.test(email)) {
-      setFieldError(emailInput, emailErr, "Adj meg egy érvényes e-mail címet.");
+      setFieldError(emailInput, emailErr, "Please enter a valid email address.");
       hasError = true;
     }
     if (!password) {
-      setFieldError(passwordInput, passwordErr, "A jelszó megadása kötelező.");
+      setFieldError(passwordInput, passwordErr, "Password is required.");
       hasError = true;
     } else if (password.length < 6) {
-      setFieldError(
-        passwordInput,
-        passwordErr,
-        "A jelszónak legalább 6 karakterből kell állnia.",
-      );
+      setFieldError(passwordInput, passwordErr, "Password must be at least 6 characters.");
       hasError = true;
     }
     if (!confirmPassword) {
-      setFieldError(
-        confirmInput,
-        confirmErr,
-        "A jelszó megerősítése kötelező.",
-      );
+      setFieldError(confirmInput, confirmErr, "Please confirm your password.");
       hasError = true;
     } else if (password && confirmPassword !== password) {
-      setFieldError(confirmInput, confirmErr, "A két jelszó nem egyezik.");
+      setFieldError(confirmInput, confirmErr, "Passwords do not match.");
       hasError = true;
     }
 
     if (hasError) return;
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "Regisztráció...";
+    submitBtn.textContent = "Registering...";
 
     try {
       const res = await globalThis.fetch(`${API_URL}/api/auth/register`, {
@@ -145,20 +132,17 @@ export function setupRegister(element, options = {}) {
       const msg =
         data?.error ||
         (res.status === 409
-          ? "Ez a felhasználónév vagy e-mail már foglalt."
+          ? "That username or email is already taken."
           : res.status === 400
-            ? "Hiányzó adatok. Töltsd ki az összes mezőt."
-            : "Sikertelen regisztráció.");
+            ? "Missing fields. Please fill in all fields."
+            : "Registration failed.");
       showFormError(errorBox, msg);
     } catch (err) {
       console.error(err);
-      showFormError(
-        errorBox,
-        "Nem sikerült elérni a szervert. Próbáld újra később.",
-      );
+      showFormError(errorBox, "Could not reach the server. Please try again later.");
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Regisztráció";
+      submitBtn.textContent = "Register";
     }
   });
 }

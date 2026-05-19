@@ -16,17 +16,17 @@ export function setupBetControls(element, options) {
       <div class="chips-rack">
         ${CHIP_DENOMS.map(
           (v) =>
-            `<button type="button" class="chip chip-${v}" data-value="${v}" title="${v} Ft hozzáadása">${formatChipLabel(v)}</button>`,
+            `<button type="button" class="chip chip-${v}" data-value="${v}" title="Add $${v}">${formatChipLabel(v)}</button>`,
         ).join("")}
-        <button type="button" class="clear-bet-btn">Mind törlése</button>
+        <button type="button" class="clear-bet-btn">Clear All</button>
       </div>
       <div class="bet-spot">
         <div class="bet-spot-circle">
           <div class="bet-spot-chips"></div>
-          <div class="bet-amount">0 Ft</div>
+          <div class="bet-amount">$0</div>
         </div>
-        <button id="start-btn" type="button" disabled>Osztás</button>
-        <p class="bet-hint">Kattints a zsetonokra a tét hozzáadásához (max ${MAX_BET.toLocaleString("hu-HU")} Ft) · Jobb klikk: levétel · A zsetonra a körben kattintva is leveszed</p>
+        <button id="start-btn" type="button" disabled>Deal</button>
+        <p class="bet-hint">Click chips to add bet (max $${MAX_BET.toLocaleString("en-US")}) · Right-click to remove</p>
       </div>
     </div>
   `;
@@ -44,7 +44,7 @@ export function setupBetControls(element, options) {
 
   function renderSpot() {
     const total = totalBet();
-    betAmountEl.textContent = `${total.toLocaleString("hu-HU")} Ft`;
+    betAmountEl.textContent = `$${total.toLocaleString("en-US")}`;
 
     betSpotChipsEl.innerHTML = "";
     const stackOffsetY = 4;
@@ -77,11 +77,11 @@ export function setupBetControls(element, options) {
     const total = totalBet();
     const balance = options.getBalance();
     if (total + value > MAX_BET) {
-      showAlert(`A maximális tét ${MAX_BET.toLocaleString("hu-HU")} Ft.`);
+      showAlert(`Maximum bet is $${MAX_BET.toLocaleString("en-US")}.`);
       return;
     }
     if (total + value > balance) {
-      showAlert("Nincs elég egyenleged!");
+      showAlert("Insufficient balance!");
       return;
     }
     placedChips.push(value);
@@ -122,7 +122,7 @@ export function setupBetControls(element, options) {
     const bet = totalBet();
     if (bet <= 0) return;
     if (bet > options.getBalance()) {
-      showAlert("Nincs elég egyenleged!");
+      showAlert("Insufficient balance!");
       return;
     }
     if (options.onStart) {
@@ -142,6 +142,9 @@ export function setupBetControls(element, options) {
     },
     reset() {
       clearBet();
+    },
+    refreshChips() {
+      refreshChipStates();
     },
   };
 }
