@@ -5,8 +5,6 @@ import {
   clearFormError,
 } from "../components/auth/authShell.js";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
-
 export function setupLogin(element, options = {}) {
   const navigate =
     options.navigate || ((path) => (window.location.hash = "#" + path));
@@ -71,7 +69,11 @@ export function setupLogin(element, options = {}) {
       setFieldError(passwordInput, passwordErr, "Password is required.");
       hasError = true;
     } else if (password.length < 6) {
-      setFieldError(passwordInput, passwordErr, "Password must be at least 6 characters.");
+      setFieldError(
+        passwordInput,
+        passwordErr,
+        "Password must be at least 6 characters.",
+      );
       hasError = true;
     }
 
@@ -81,7 +83,7 @@ export function setupLogin(element, options = {}) {
     submitBtn.textContent = "Logging in...";
 
     try {
-      const res = await globalThis.fetch(`${API_URL}/api/auth/login`, {
+      const res = await globalThis.fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -102,7 +104,10 @@ export function setupLogin(element, options = {}) {
       showFormError(errorBox, msg);
     } catch (err) {
       console.error(err);
-      showFormError(errorBox, "Could not reach the server. Please try again later.");
+      showFormError(
+        errorBox,
+        "Could not reach the server. Please try again later.",
+      );
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = "Login";

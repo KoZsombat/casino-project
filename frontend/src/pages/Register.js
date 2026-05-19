@@ -4,8 +4,6 @@ import {
   showFormError,
   clearFormError,
 } from "../components/auth/authShell.js";
-
-const API_URL = import.meta.env.VITE_API_URL || "";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function setupRegister(element, options = {}) {
@@ -92,14 +90,22 @@ export function setupRegister(element, options = {}) {
       setFieldError(emailInput, emailErr, "Email address is required.");
       hasError = true;
     } else if (!EMAIL_RE.test(email)) {
-      setFieldError(emailInput, emailErr, "Please enter a valid email address.");
+      setFieldError(
+        emailInput,
+        emailErr,
+        "Please enter a valid email address.",
+      );
       hasError = true;
     }
     if (!password) {
       setFieldError(passwordInput, passwordErr, "Password is required.");
       hasError = true;
     } else if (password.length < 6) {
-      setFieldError(passwordInput, passwordErr, "Password must be at least 6 characters.");
+      setFieldError(
+        passwordInput,
+        passwordErr,
+        "Password must be at least 6 characters.",
+      );
       hasError = true;
     }
     if (!confirmPassword) {
@@ -116,7 +122,7 @@ export function setupRegister(element, options = {}) {
     submitBtn.textContent = "Registering...";
 
     try {
-      const res = await globalThis.fetch(`${API_URL}/api/auth/register`, {
+      const res = await globalThis.fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -139,7 +145,10 @@ export function setupRegister(element, options = {}) {
       showFormError(errorBox, msg);
     } catch (err) {
       console.error(err);
-      showFormError(errorBox, "Could not reach the server. Please try again later.");
+      showFormError(
+        errorBox,
+        "Could not reach the server. Please try again later.",
+      );
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = "Register";
