@@ -1,21 +1,25 @@
 const cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
 const cardValues = {
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-  8: 8,
-  9: 9,
-  10: 10,
-  J: 10,
-  Q: 10,
-  K: 10,
-  A: 11,
+  2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10,
+  J: 10, Q: 10, K: 10, A: 11,
 };
 
+const GAME_TIMEOUT_MS = 30 * 60 * 1000;
+
 const blackjackGames = new Map();
+const gameTimers = new Map();
+
+function clearGame(token) {
+  globalThis.clearTimeout(gameTimers.get(token));
+  gameTimers.delete(token);
+  blackjackGames.delete(token);
+}
+
+function scheduleExpiry(token) {
+  globalThis.clearTimeout(gameTimers.get(token));
+  const timer = globalThis.setTimeout(() => clearGame(token), GAME_TIMEOUT_MS);
+  gameTimers.set(token, timer);
+}
 
 function drawCard(hand) {
   const card = cards[Math.floor(Math.random() * cards.length)];
@@ -29,10 +33,7 @@ function getHandValue(hand) {
 
   for (const card of hand) {
     total += cardValues[card] ?? 0;
-
-    if (card === "A") {
-      aces += 1;
-    }
+    if (card === "A") aces += 1;
   }
 
   while (total > 21 && aces > 0) {
@@ -92,14 +93,7 @@ export function BlackJackCalc(playerRanks, dealerRanks, amount) {
     payout = amount;
   }
 
-  return {
-    playerRanks,
-    dealerRanks,
-    payout,
-    win: payout > 0,
-    playerValue,
-    dealerValue,
-  };
+  return { playerRanks, dealerRanks, payout, win: payout > 0, playerValue, dealerValue };
 }
 
 export function BlackJackStart(token, bet) {
@@ -116,6 +110,7 @@ export function BlackJackStart(token, bet) {
   syncDisplayCards(state.dealerCards, state.dealerRanks);
 
   blackjackGames.set(token, state);
+  scheduleExpiry(token);
 
   return {
     playerCards: state.playerCards,
@@ -127,10 +122,7 @@ export function BlackJackStart(token, bet) {
 
 export function BlackJackHit(token) {
   const state = blackjackGames.get(token);
-
-  if (!state) {
-    return null;
-  }
+  if (!state) return null;
 
   const previousPlayerLength = state.playerRanks.length;
   BlackJack(state.playerRanks, state.dealerRanks, state.bet);
@@ -139,27 +131,17 @@ export function BlackJackHit(token) {
   const newCard = state.playerCards[state.playerCards.length - 1];
   const playerScore = getHandValue(state.playerRanks);
 
-  return {
-    newCard: newCard,
-    playerCards: state.playerCards,
-    playerScore: playerScore,
-    bust: playerScore > 21,
-  };
+  scheduleExpiry(token);
+
+  return { newCard, playerCards: state.playerCards, playerScore, bust: playerScore > 21 };
 }
 
 export function BlackJackStand(token) {
   const state = blackjackGames.get(token);
-
-  if (!state) {
-    return null;
-  }
+  if (!state) return null;
 
   const previousDealerLength = state.dealerRanks.length;
-  const { payout } = BlackJackCalc(
-    state.playerRanks,
-    state.dealerRanks,
-    state.bet,
-  );
+  const { payout } = BlackJackCalc(state.playerRanks, state.dealerRanks, state.bet);
   syncDisplayCards(state.dealerCards, state.dealerRanks, previousDealerLength);
 
   const playerScore = getHandValue(state.playerRanks);
@@ -176,12 +158,7 @@ export function BlackJackStand(token) {
     result = "push";
   }
 
-  blackjackGames.delete(token);
+  clearGame(token);
 
-  return {
-    dealerCards: state.dealerCards,
-    dealerScore: dealerScore,
-    result: result,
-    payout: payout,
-  };
+  return { dealerCards: state.dealerCards, dealerScore, result, payout };
 }

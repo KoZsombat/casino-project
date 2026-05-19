@@ -1,0 +1,448 @@
+/* src/pages/Login.css */
+
+:root {
+  --casino-dark-green: #072213;
+  --casino-felt-green: #0b3920;
+  --casino-gold: #c3a152;
+  --casino-gold-hover: #e5c777;
+  --panel-bg: rgba(0, 0, 0, 0.4);
+  --border-gold: 1px solid rgba(195, 161, 82, 0.3);
+}
+
+.auth-page {
+  background: radial-gradient(
+    circle,
+    var(--casino-felt-green) 0%,
+    var(--casino-dark-green) 100%
+  );
+  color: #f5f5f5;
+  font-family: "Georgia", "Times New Roman", serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* NAVBAR — same wireframe as Home */
+.auth-page .casino-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background-color: rgba(4, 21, 12, 0.9);
+  border-bottom: var(--border-gold);
+  flex-shrink: 0;
+}
+
+.auth-page .nav-logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--casino-gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  padding: 0;
+}
+
+.auth-page .nav-logo:hover {
+  color: var(--casino-gold-hover);
+}
+
+.auth-page .btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
+.auth-page .btn-back {
+  background: var(--panel-bg);
+  color: var(--casino-gold);
+  border: var(--border-gold);
+}
+.auth-page .btn-back:hover {
+  background: rgba(195, 161, 82, 0.15);
+}
+
+/* MAIN AUTH AREA */
+.auth-main {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(4, 21, 12, 0.85);
+  border: var(--border-gold);
+  border-radius: 10px;
+  padding: 2.5rem 2.2rem;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.55),
+    inset 0 0 40px rgba(195, 161, 82, 0.04);
+  position: relative;
+}
+
+.auth-card::before {
+  content: "♠ ♥ ♦ ♣";
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(4, 21, 12, 0.95);
+  border: var(--border-gold);
+  border-radius: 999px;
+  padding: 0.2rem 1rem;
+  color: var(--casino-gold);
+  letter-spacing: 6px;
+  font-size: 0.8rem;
+}
+
+.auth-title {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--casino-gold);
+  margin: 0.4rem 0 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  color: #ccc;
+  margin: 0 0 1.6rem;
+}
+
+/* TABS */
+.auth-tabs {
+  display: flex;
+  background: var(--panel-bg);
+  border: var(--border-gold);
+  border-radius: 6px;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+  gap: 4px;
+}
+
+.auth-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.7rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: bold;
+}
+
+.auth-tab:hover {
+  color: var(--casino-gold-hover);
+}
+
+.auth-tab.active {
+  background: var(--casino-gold);
+  color: var(--casino-dark-green);
+}
+
+/* FORM */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-family: sans-serif;
+  font-size: 0.75rem;
+  color: var(--casino-gold);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.field input {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(195, 161, 82, 0.25);
+  border-radius: 4px;
+  padding: 0.75rem 0.9rem;
+  color: #f5f5f5;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 1rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.field input::placeholder {
+  color: rgba(245, 245, 245, 0.35);
+  font-family: sans-serif;
+  font-size: 0.9rem;
+}
+
+.field input:focus {
+  border-color: var(--casino-gold);
+  background: rgba(0, 0, 0, 0.65);
+  box-shadow: 0 0 0 3px rgba(195, 161, 82, 0.15);
+}
+
+.field input.invalid {
+  border-color: #d3504a;
+  box-shadow: 0 0 0 3px rgba(211, 80, 74, 0.15);
+}
+
+.field-error {
+  font-family: sans-serif;
+  font-size: 0.78rem;
+  color: #f0b8b4;
+  min-height: 1em;
+  letter-spacing: 0.2px;
+}
+
+.field-error:empty {
+  display: none;
+}
+
+.form-error {
+  background: rgba(211, 80, 74, 0.12);
+  border: 1px solid rgba(211, 80, 74, 0.4);
+  color: #f0b8b4;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  text-align: center;
+  display: none;
+}
+
+.form-error.visible {
+  display: block;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  color: #aaa;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.form-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.form-row a {
+  color: var(--casino-gold);
+  text-decoration: none;
+}
+
+.form-row a:hover {
+  color: var(--casino-gold-hover);
+  text-decoration: underline;
+}
+
+.btn-submit {
+  background: var(--panel-bg);
+  color: var(--casino-gold);
+  border: 1px solid var(--casino-gold);
+  padding: 0.9rem;
+  margin-top: 0.4rem;
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+  background: var(--casino-gold);
+  color: var(--casino-dark-green);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.4rem 0;
+  color: rgba(195, 161, 82, 0.5);
+  font-family: sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(195, 161, 82, 0.2);
+}
+
+.auth-footnote {
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  color: #aaa;
+  margin: 0.2rem 0 0;
+}
+
+.auth-footnote button {
+  background: none;
+  border: none;
+  color: var(--casino-gold);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.5px;
+}
+
+.auth-footnote button:hover {
+  color: var(--casino-gold-hover);
+  text-decoration: underline;
+}
+
+/* FOOTER — same as Home */
+.auth-page .casino-footer {
+  background-color: rgba(4, 21, 12, 0.95);
+  padding: 1rem 2rem;
+  text-align: center;
+  border-top: var(--border-gold);
+  font-family: sans-serif;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-page .casino-footer p {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* FLOATING BG — reuse Home pattern */
+.auth-page .floating-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-page .casino-navbar,
+.auth-page .auth-main,
+.auth-page .casino-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-page .floating-item {
+  position: absolute;
+  will-change: transform;
+  user-select: none;
+  animation: casinoFloat infinite ease-in-out;
+}
+
+.auth-page .floating-item.card.red {
+  color: rgba(211, 47, 47, 0.65);
+}
+.auth-page .floating-item.card.black {
+  color: rgba(255, 255, 255, 0.55);
+}
+.auth-page .floating-item.chip.gold {
+  filter: drop-shadow(0 10px 15px rgba(195, 161, 82, 0.35)) hue-rotate(10deg);
+}
+.auth-page .floating-item.chip.green {
+  filter: drop-shadow(0 10px 15px rgba(34, 197, 94, 0.25)) hue-rotate(90deg);
+}
+.auth-page .floating-item.chip.black {
+  filter: grayscale(1) contrast(1.4);
+}
+
+@keyframes casinoFloat {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-40px) rotate(12deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .auth-page .floating-bg {
+    display: none;
+  }
+
+  .auth-page .casino-navbar {
+    padding: 0.7rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .auth-page .nav-logo {
+    font-size: 1.1rem;
+  }
+
+  .auth-main {
+    padding: 2rem 1rem;
+  }
+
+  .auth-card {
+    padding: 2rem 1.3rem;
+  }
+
+  .auth-title {
+    font-size: 1.6rem;
+  }
+}

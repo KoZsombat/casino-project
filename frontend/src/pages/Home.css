@@ -10,14 +10,18 @@
 }
 
 .landing-page {
-  background: radial-gradient(circle, var(--casino-felt-green) 0%, var(--casino-dark-green) 100%);
+  background: radial-gradient(
+    circle,
+    var(--casino-felt-green) 0%,
+    var(--casino-dark-green) 100%
+  );
   color: #f5f5f5;
-  font-family: 'Georgia', 'Times New Roman', serif;
-  height: 100vh;
-  max-height: 100vh;
+  font-family: "Georgia", "Times New Roman", serif;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   box-sizing: border-box;
   position: relative;
 }
@@ -56,8 +60,16 @@
   gap: 0.6rem;
 }
 
-.balance-label { color: #aaa; font-family: sans-serif; font-size: 0.85rem; }
-.balance-amount { color: var(--casino-gold); font-weight: bold; font-size: 0.95rem; }
+.balance-label {
+  color: #aaa;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+}
+.balance-amount {
+  color: var(--casino-gold);
+  font-weight: bold;
+  font-size: 0.95rem;
+}
 
 /* HERO */
 .casino-hero {
@@ -73,18 +85,18 @@
   margin: 0 auto;
 }
 
-.hero-title { 
-  font-size: 3rem; 
-  color: var(--casino-gold); 
+.hero-title {
+  font-size: 3rem;
+  color: var(--casino-gold);
   margin: 0 0 0.5rem 0;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.hero-subtitle { 
-  font-size: 1rem; 
-  color: #ccc; 
-  margin: 0 0 1.5rem 0; 
+.hero-subtitle {
+  font-size: 1rem;
+  color: #ccc;
+  margin: 0 0 1.5rem 0;
   font-family: sans-serif;
 }
 
@@ -100,8 +112,8 @@
   letter-spacing: 1px;
 }
 
-.btn-login { 
-  background: var(--panel-bg); 
+.btn-login {
+  background: var(--panel-bg);
   color: var(--casino-gold);
   border: var(--border-gold);
 }
@@ -109,22 +121,22 @@
   background: rgba(195, 161, 82, 0.15);
 }
 
-.btn-hero-action { 
-  background: var(--panel-bg); 
-  color: var(--casino-gold); 
+.btn-hero-action {
+  background: var(--panel-bg);
+  color: var(--casino-gold);
   border: 1px solid var(--casino-gold);
   padding: 0.8rem 2.5rem;
 }
-.btn-hero-action:hover { 
+.btn-hero-action:hover {
   background: var(--casino-gold);
   color: var(--casino-dark-green);
 }
 
-.btn-play-game { 
-  background: var(--panel-bg); 
-  color: var(--casino-gold); 
+.btn-play-game {
+  background: var(--panel-bg);
+  color: var(--casino-gold);
   border: var(--border-gold);
-  width: 100%; 
+  width: 100%;
   padding: 0.8rem;
   font-size: 0.9rem;
   flex-shrink: 0;
@@ -139,20 +151,19 @@
 .casino-explore {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 2rem 2rem;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
   width: 100%;
   box-sizing: border-box;
 }
 
-.section-title { 
-  font-size: 2.5rem; 
-  color: var(--casino-gold); 
-  margin: 0 0 6rem 0; 
+.section-title {
+  font-size: 2.5rem;
+  color: var(--casino-gold);
+  margin: 0 0 6rem 0;
   text-align: center;
   text-transform: uppercase;
 }
@@ -174,13 +185,15 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 1.2rem;
-  max-height: calc(100vh - 280px);
-  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.3s, box-shadow 0.4s;
+  transition:
+    transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    border-color 0.3s,
+    box-shadow 0.4s;
   cursor: pointer;
 }
 
-.game-card:hover { 
-  transform: translateY(-8px); 
+.game-card:hover {
+  transform: translateY(-8px);
   box-shadow: 0 15px 30px rgba(195, 161, 82, 0.2);
   border-color: var(--casino-gold);
 }
@@ -200,7 +213,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease, filter 0.3s;
+  transition:
+    transform 0.5s ease,
+    filter 0.3s;
   filter: brightness(0.8) contrast(1.1);
 }
 
@@ -229,18 +244,18 @@
   border: 1px solid rgba(195, 161, 82, 0.15);
 }
 
-.game-card h3 { 
-  font-size: 1.5rem; 
-  color: var(--casino-gold); 
-  margin: 0; 
+.game-card h3 {
+  font-size: 1.5rem;
+  color: var(--casino-gold);
+  margin: 0;
   text-transform: uppercase;
 }
 
-.game-card p { 
-  color: #ddd; 
-  font-family: sans-serif; 
-  font-size: 0.95rem; 
-  line-height: 1.5; 
+.game-card p {
+  color: #ddd;
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
   margin: 0;
 }
 
@@ -272,7 +287,11 @@
   z-index: 0;
 }
 
-.casino-navbar, .casino-hero, .live-stats, .casino-explore, .casino-footer {
+.casino-navbar,
+.casino-hero,
+.live-stats,
+.casino-explore,
+.casino-footer {
   position: relative;
   z-index: 1;
 }
@@ -284,14 +303,86 @@
   animation: casinoFloat infinite ease-in-out;
 }
 
-.floating-item.card.red { color: rgba(211, 47, 47, 0.65); }
-.floating-item.card.black { color: rgba(255, 255, 255, 0.55); }
-.floating-item.chip.gold { filter: drop-shadow(0 10px 15px rgba(195, 161, 82, 0.35)) hue-rotate(10deg); }
-.floating-item.chip.green { filter: drop-shadow(0 10px 15px rgba(34, 197, 94, 0.25)) hue-rotate(90deg); }
-.floating-item.chip.black { filter: grayscale(1) contrast(1.4); }
+.floating-item.card.red {
+  color: rgba(211, 47, 47, 0.65);
+}
+.floating-item.card.black {
+  color: rgba(255, 255, 255, 0.55);
+}
+.floating-item.chip.gold {
+  filter: drop-shadow(0 10px 15px rgba(195, 161, 82, 0.35)) hue-rotate(10deg);
+}
+.floating-item.chip.green {
+  filter: drop-shadow(0 10px 15px rgba(34, 197, 94, 0.25)) hue-rotate(90deg);
+}
+.floating-item.chip.black {
+  filter: grayscale(1) contrast(1.4);
+}
 
 @keyframes casinoFloat {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-40px) rotate(12deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-40px) rotate(12deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .section-title {
+    margin: 0 0 3rem 0;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .floating-bg {
+    display: none;
+  }
+
+  .casino-navbar {
+    padding: 0.7rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .nav-logo {
+    font-size: 1.1rem;
+  }
+
+  .casino-hero {
+    padding: 2.5rem 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .casino-explore {
+    padding: 1.5rem 1rem;
+    justify-content: flex-start;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
 }

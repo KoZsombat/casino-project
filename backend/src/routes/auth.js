@@ -3,18 +3,19 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { con } from "../db/connection.js";
 import Auth from "../middleware/auth.js";
+import { registerSchema, loginSchema, validate } from "../validators.js";
 
 const authRouter = express.Router();
 
 authRouter.post("/register", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const data = validate(registerSchema, req.body, res);
+    if (!data) return;
 
-    if (!username || !email || !password)
-      return res.status(400).json({ error: "Invalid Request" });
+    const { username, email, password } = data;
 
     const [userDup] = await con.query(
-      "SELECT * FROM users WHERE email = ? OR username = ?",
+      "SELECT id FROM users WHERE email = ? OR username = ?",
       [email, username],
     );
 
@@ -38,10 +39,10 @@ authRouter.post("/register", async (req, res) => {
 
 authRouter.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const data = validate(loginSchema, req.body, res);
+    if (!data) return;
 
-    if (!username || !password)
-      return res.status(400).json({ error: "Invalid Request" });
+    const { username, password } = data;
 
     const [user] = await con.query("SELECT * FROM users WHERE username = ?", [
       username,
@@ -49,14 +50,16 @@ authRouter.post("/login", async (req, res) => {
 
     if (!user || user.length === 0)
       return res.status(401).json({ error: "Invalid username or password" });
+
     const passMatch = await bcrypt.compare(password, user[0].password_hash);
     if (!passMatch)
       return res.status(401).json({ error: "Invalid username or password" });
 
-    const token = `${username}_token_${crypto.randomBytes(10).toString("hex")}`;
+    const token = crypto.randomBytes(32).toString("hex");
     const date = new Date();
     const sessionMaxAgeMs = 3 * 60 * 60 * 1000;
     const expires_at = new Date(date.getTime() + sessionMaxAgeMs);
+
     await con.query(
       "INSERT INTO sessions (user_id, token, expires_at, created_at) VALUES (?,?,?,?)",
       [user[0].id, token, expires_at, date],

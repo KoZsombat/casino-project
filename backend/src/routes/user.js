@@ -4,7 +4,7 @@ import Auth from "../middleware/auth.js";
 
 const userRouter = express.Router();
 
-userRouter.post("/balance", Auth, async (req, res) => {
+userRouter.get("/balance", Auth, async (req, res) => {
   try {
     const [sessionRow] = await con.query(
       "SELECT * FROM sessions WHERE token = ?",
