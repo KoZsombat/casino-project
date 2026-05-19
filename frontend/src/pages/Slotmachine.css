@@ -18,7 +18,6 @@
   --sm-sym-h:       160px;
 }
 
-/* ── Oldal alap ───────────────────────────────────────────── */
 .sm-page {
   position: relative;
   display: flex;
@@ -58,7 +57,6 @@
 }
 .sm-page > * { position: relative; z-index: 1; }
 
-/* ── Cím ──────────────────────────────────────────────────── */
 .sm-title {
   font-family: var(--sm-serif);
   color: var(--sm-gold);
@@ -87,7 +85,6 @@
   background: linear-gradient(90deg, transparent, rgba(212,175,55,0.55), transparent);
 }
 
-/* ── Arena: 3 oszlopos layout ─────────────────────────────── */
 .sm-arena {
   display: grid;
   grid-template-columns: 260px 1fr 180px;
@@ -100,7 +97,6 @@
   min-height: 0;
 }
 
-/* ── Kifizetési táblázat (bal) ────────────────────────────── */
 .sm-paytable {
   background: rgba(0,0,0,0.38);
   border: 1px solid rgba(212,175,55,0.32);
@@ -146,7 +142,6 @@
 .sm-sym-seven .sm-pay-sym   { color: var(--sm-red); }
 .sm-sym-diamond .sm-pay-sym { color: #7dd3fc; }
 
-/* ── Gép közép ───────────────────────────────────────────── */
 .sm-machine-col {
   display: flex;
   flex-direction: column;
@@ -234,7 +229,6 @@
   filter: none;
 }
 
-/* ── Eredmény sáv ─────────────────────────────────────────── */
 .sm-result-area {
   margin-top: 18px;
   min-height: 58px;
@@ -273,7 +267,6 @@
 .sm-result-lose { border-color: rgba(192,57,43,0.55) !important; }
 .sm-result-lose .sm-result-label { color: #f87171; }
 
-/* ── Chipek / tét ─────────────────────────────────────────── */
 .sm-controls { width: 100%; text-align: center; }
 
 .sm-bet-label {
@@ -332,7 +325,6 @@
 .sm-bet-display { color: var(--sm-text-dim); font-size: 15px; }
 .sm-bet-value   { color: var(--sm-gold-bright); font-weight: 700; }
 
-/* ── Kar (jobb) ───────────────────────────────────────────── */
 .sm-lever-col {
   display: flex;
   flex-direction: column;
@@ -347,7 +339,6 @@
   opacity: 0.5;
 }
 
-/* A teljes kar egységként forog a talpától */
 .sm-lever-track {
   position: relative;
   width: 44px;
@@ -358,7 +349,6 @@
   cursor: pointer;
 }
 
-/* Gömb — ELSŐ gyerek = a kar TETEJÉN van */
 .sm-lever-ball {
   width: 76px;
   height: 76px;
@@ -390,18 +380,15 @@
     inset 0 4px 8px rgba(255,255,255,0.24);
 }
 
-/* Rúd — MÁSODIK gyerek = a gömb alatt, lefele nyúlik */
 .sm-lever-stick {
   flex: 1;
   width: 18px;
   background: linear-gradient(90deg, #8a6a2a 0%, #d4af37 38%, #f0d474 52%, #b8962e 100%);
   border-radius: 9px;
   box-shadow: 3px 3px 12px rgba(0,0,0,0.65), inset -2px 0 5px rgba(0,0,0,0.32);
-  /* scaleY alulról zsugorodik → az alap fix marad */
   transform-origin: bottom center;
 }
 
-/* Mobil: vízszintes rúd jobbról zsugorodik (alap jobb oldalt van) */
 @media (max-width: 860px) {
   .sm-lever-stick {
     transform-origin: right center;
@@ -409,7 +396,6 @@
 }
 
 
-/* Talpazat */
 .sm-lever-base {
   width: 72px;
   height: 28px;
@@ -438,7 +424,6 @@
 }
 
 
-/* ── Reszponzív: közepes képernyő ─────────────────────────── */
 @media (max-width: 1100px) {
   .sm-arena {
     grid-template-columns: 200px 1fr 150px;
@@ -449,7 +434,6 @@
   .sm-sym-seven .sm-sym-label, .sm-sym-diamond .sm-sym-label { font-size: 72px; }
 }
 
-/* ── Reszponzív: mobil ────────────────────────────────────── */
 @media (max-width: 860px) {
   :root { --sm-sym-h: 95px; }
 
@@ -466,7 +450,6 @@
   .sm-paytable { order: 3; position: static; }
   .sm-machine-col { order: 1; }
 
-  /* Vízszintes kar mobilon */
   .sm-lever-col {
     order: 2;
     flex-direction: row;
@@ -484,7 +467,6 @@
   }
 
 
-  /* Mobilon a gömb bal oldalt, a rúd jobbra nyúlik */
   .sm-lever-ball {
     margin-bottom: 0;
     margin-right: -10px;

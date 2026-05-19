@@ -1,5 +1,5 @@
 import showAlert from "../components/showAlert.js";
-import "./SlotMachine.css";
+import "./Slotmachine.css";
 import { setupGameHeader } from "../components/GameHeader.js";
 
 const SYMBOLS = [
@@ -107,11 +107,9 @@ function setupLever(leverWrap, onPull) {
     locked = true;
     hint.style.opacity = "0";
 
-    // Asztali: gömb lefelé, rúd rövidül (szemből nézett perspektíva-hatás)
-    // Mobil: gömb balra (kihúzás a gép felé), rúd rövidül X-ben
     const mobile  = window.innerWidth <= 860;
-    const dist    = mobile ? 80  : 130;   // px, gömb elmozdulása
-    const scale   = mobile ? 0.5 : 0.52;  // rúd összehúzódás mértéke
+    const dist    = mobile ? 80  : 130;
+    const scale   = mobile ? 0.5 : 0.52;
 
     const ballPullKf = mobile
       ? [{ transform: "translateX(0)" }, { transform: `translateX(${dist}px)` }]
@@ -126,7 +124,6 @@ function setupLever(leverWrap, onPull) {
     const sP = stick.animate(stickPullKf, opts);
     await Promise.all([bP.finished, sP.finished]);
 
-    // Rugós visszapattanás — gömb és rúd koordináltan lő vissza
     const ballRetKf = mobile
       ? [
           { transform: `translateX(${dist}px)` },
