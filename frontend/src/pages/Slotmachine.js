@@ -1,46 +1,44 @@
 import showAlert from "../components/showAlert.js";
 import "./Slotmachine.css";
 import { setupGameHeader } from "../components/GameHeader.js";
+import { fetchBalance } from "../api/blackjack.js";
+import { spinSlot } from "../api/slot.js";
 
 const SYMBOLS = [
-  { id: "cherry",  label: "🍒", name: "Cseresznye", weight: 30, payout: 2   },
-  { id: "lemon",   label: "🍋", name: "Citrom",     weight: 25, payout: 3   },
-  { id: "orange",  label: "🍊", name: "Narancs",    weight: 20, payout: 4   },
-  { id: "grape",   label: "🍇", name: "Szőlő",      weight: 15, payout: 6   },
-  { id: "bell",    label: "🔔", name: "Csengő",     weight: 6,  payout: 15  },
-  { id: "seven",   label: "7",  name: "Hetes",      weight: 3,  payout: 50  },
-  { id: "diamond", label: "♦",  name: "Gyémánt",    weight: 1,  payout: 100 },
+  { id: "cherry",  label: "🍒" },
+  { id: "lemon",   label: "🍋" },
+  { id: "orange",  label: "🍊" },
+  { id: "grape",   label: "🍇" },
+  { id: "bell",    label: "🔔" },
+  { id: "seven",   label: "7"  },
+  { id: "diamond", label: "♦"  },
+  { id: "bonus",   label: "🎰" },
 ];
 
-const TOTAL_WEIGHT = SYMBOLS.reduce((s, sym) => s + sym.weight, 0);
+const BACKEND_TO_SYMBOL = {
+  20:      { id: "cherry",  label: "🍒", name: "Cherry"  },
+  50:      { id: "lemon",   label: "🍋", name: "Lemon"   },
+  100:     { id: "orange",  label: "🍊", name: "Orange"  },
+  200:     { id: "grape",   label: "🍇", name: "Grape"   },
+  500:     { id: "bell",    label: "🔔", name: "Bell"    },
+  1000:    { id: "seven",   label: "7",  name: "Seven"   },
+  2000:    { id: "diamond", label: "♦",  name: "Diamond" },
+  "Bonus": { id: "bonus",   label: "🎰", name: "Bonus"   },
+};
+
+const PAYTABLE = [
+  { id: "bonus",   label: "🎰", payout: "$5,000" },
+  { id: "diamond", label: "♦",  payout: "×20"   },
+  { id: "seven",   label: "7",  payout: "×10"   },
+  { id: "bell",    label: "🔔", payout: "×5"    },
+  { id: "grape",   label: "🍇", payout: "×2"    },
+  { id: "orange",  label: "🍊", payout: "×1"    },
+  { id: "lemon",   label: "🍋", payout: "×0.5"  },
+  { id: "cherry",  label: "🍒", payout: "×0.2"  },
+];
 
 function wait(ms) {
   return new Promise((resolve) => globalThis.setTimeout(resolve, ms));
-}
-
-function pickSymbol() {
-  let r = Math.random() * TOTAL_WEIGHT;
-  for (const sym of SYMBOLS) {
-    r -= sym.weight;
-    if (r <= 0) return sym;
-  }
-  return SYMBOLS[0];
-}
-
-function calcResult(reels, bet) {
-  const [a, b, c] = reels;
-  if (a.id === b.id && b.id === c.id) {
-    const jackpot = a.id === "diamond";
-    return {
-      type: jackpot ? "jackpot" : "win3",
-      payout: bet * a.payout,
-      label: jackpot ? "JACKPOT!" : `Három ${a.name}!`,
-    };
-  }
-  if (a.id === b.id || b.id === c.id || a.id === c.id) {
-    return { type: "win2", payout: Math.floor(bet * 0.5), label: "Pár — fél tét vissza!" };
-  }
-  return { type: "lose", payout: 0, label: "Nem nyertél. Próbáld újra!" };
 }
 
 const VISIBLE   = 3;
@@ -128,8 +126,8 @@ function setupLever(leverWrap, onPull) {
       ? [
           { transform: `translateX(${dist}px)` },
           { transform: "translateX(-12px)", offset: 0.45 },
-          { transform: "translateX(4px)",  offset: 0.68 },
-          { transform: "translateX(-1px)", offset: 0.84 },
+          { transform: "translateX(4px)",   offset: 0.68 },
+          { transform: "translateX(-1px)",  offset: 0.84 },
           { transform: "translateX(0)" },
         ]
       : [
@@ -143,16 +141,16 @@ function setupLever(leverWrap, onPull) {
     const stickRetKf = mobile
       ? [
           { transform: `scaleX(${scale})` },
-          { transform: "scaleX(1.06)",   offset: 0.45 },
-          { transform: "scaleX(0.97)",   offset: 0.68 },
-          { transform: "scaleX(1.01)",   offset: 0.84 },
+          { transform: "scaleX(1.06)",  offset: 0.45 },
+          { transform: "scaleX(0.97)",  offset: 0.68 },
+          { transform: "scaleX(1.01)",  offset: 0.84 },
           { transform: "scaleX(1)" },
         ]
       : [
           { transform: `scaleY(${scale})` },
-          { transform: "scaleY(1.06)",   offset: 0.45 },
-          { transform: "scaleY(0.97)",   offset: 0.68 },
-          { transform: "scaleY(1.01)",   offset: 0.84 },
+          { transform: "scaleY(1.06)",  offset: 0.45 },
+          { transform: "scaleY(0.97)",  offset: 0.68 },
+          { transform: "scaleY(1.01)",  offset: 0.84 },
           { transform: "scaleY(1)" },
         ];
 
@@ -180,11 +178,11 @@ function setupLever(leverWrap, onPull) {
 }
 
 export function setupSlotMachine(element, options = {}) {
-  let balance    = 1000;
+  let balance    = 0;
   let spinning   = false;
   let currentBet = 10;
 
-  const BET_OPTIONS = [5, 10, 25, 50, 100, 500];
+  const BET_OPTIONS = [10, 25, 50, 100, 500];
 
   element.innerHTML = `
     <div class="sm-page">
@@ -197,17 +195,13 @@ export function setupSlotMachine(element, options = {}) {
       <div class="sm-arena">
 
         <aside class="sm-paytable">
-          <div class="sm-paytable-title">Kifizetések</div>
+          <div class="sm-paytable-title">Payouts</div>
           <div class="sm-paytable-grid">
-            ${SYMBOLS.slice().reverse().map((s) => `
+            ${PAYTABLE.map((s) => `
               <div class="sm-pay-row">
                 <span class="sm-pay-sym sm-sym-${s.id}">${s.label}${s.label}${s.label}</span>
-                <span class="sm-pay-mult">×${s.payout}</span>
+                <span class="sm-pay-mult">${s.payout}</span>
               </div>`).join("")}
-            <div class="sm-pay-row sm-pay-pair">
-              <span class="sm-pay-sym">Pár</span>
-              <span class="sm-pay-mult">×0.5</span>
-            </div>
           </div>
         </aside>
 
@@ -228,14 +222,14 @@ export function setupSlotMachine(element, options = {}) {
           </div>
 
           <div class="sm-controls">
-            <div class="sm-bet-label">Tét</div>
+            <div class="sm-bet-label">Bet</div>
             <div class="sm-chips-rack" id="sm-chips-rack">
               ${BET_OPTIONS.map((v) =>
                 `<button class="sm-chip sm-chip-${v}${v === currentBet ? " sm-chip-active" : ""}" data-bet="${v}">${v}</button>`
               ).join("")}
             </div>
             <div class="sm-bet-display">
-              Jelenlegi tét: <span class="sm-bet-value" id="sm-bet-value">${currentBet}</span>
+              Current bet: <span class="sm-bet-value" id="sm-bet-value">$${currentBet}</span>
             </div>
           </div>
         </div>
@@ -246,7 +240,7 @@ export function setupSlotMachine(element, options = {}) {
             <div class="sm-lever-stick" id="sm-lever-stick"></div>
           </div>
           <div class="sm-lever-base"></div>
-          <div class="sm-lever-hint" id="sm-lever-hint">Húzd le!</div>
+          <div class="sm-lever-hint" id="sm-lever-hint">Pull!</div>
         </div>
 
       </div>
@@ -254,12 +248,18 @@ export function setupSlotMachine(element, options = {}) {
   `;
 
   const header = setupGameHeader(element.querySelector("#sm-header"), {
-    initialBalance: balance,
+    initialBalance: 0,
     onBack: () => { if (options.onBack) options.onBack(); },
   });
 
-  const reels = [0, 1, 2].map((i) => setupReel(element.querySelector(`#sm-reel-${i}`)));
+  fetchBalance().then((bal) => {
+    if (bal != null) {
+      balance = bal;
+      header.setBalance(bal);
+    }
+  });
 
+  const reels = [0, 1, 2].map((i) => setupReel(element.querySelector(`#sm-reel-${i}`)));
   const lever = setupLever(element.querySelector("#sm-lever-wrap"), handleSpin);
 
   const chipsRack  = element.querySelector("#sm-chips-rack");
@@ -270,7 +270,7 @@ export function setupSlotMachine(element, options = {}) {
     const btn = e.target.closest(".sm-chip");
     if (!btn || spinning) return;
     currentBet = parseInt(btn.dataset.bet, 10);
-    betValueEl.textContent = currentBet;
+    betValueEl.textContent = `$${currentBet}`;
     chipsRack.querySelectorAll(".sm-chip").forEach((b) =>
       b.classList.toggle("sm-chip-active", b === btn)
     );
@@ -279,7 +279,7 @@ export function setupSlotMachine(element, options = {}) {
   async function handleSpin() {
     if (spinning) return;
     if (balance < currentBet) {
-      showAlert("Nincs elegendő egyenleged!");
+      showAlert("Insufficient balance!");
       return;
     }
 
@@ -289,34 +289,51 @@ export function setupSlotMachine(element, options = {}) {
     resultEl.textContent = "";
     reels.forEach((r) => r.highlight(false));
 
-    balance -= currentBet;
-    header.setBalance(balance);
+    try {
+      const data = await spinSlot(currentBet);
+      const { symbols, win, payout, newBalance } = data;
 
-    const targets = [pickSymbol(), pickSymbol(), pickSymbol()];
-    const result  = calcResult(targets, currentBet);
+      // Winning symbol is at index 27 (length - 3) per reel
+      const targets = [0, 1, 2].map((i) => {
+        const key = symbols[i][27];
+        return BACKEND_TO_SYMBOL[key] ?? SYMBOLS[0];
+      });
 
-    await Promise.all(targets.map((t, i) => reels[i].spin(t, 900 + i * 350)));
+      await Promise.all(targets.map((t, i) => reels[i].spin(t, 900 + i * 350)));
 
-    balance += result.payout;
-    header.setBalance(balance);
+      balance = parseFloat(newBalance);
+      header.setBalance(balance);
 
-    if (result.type !== "lose") reels.forEach((r) => r.highlight(true));
-    showResult(result);
-
-    spinning = false;
-    lever.setLocked(false);
+      if (win) reels.forEach((r) => r.highlight(true));
+      showResult({ win, payout, winSym: targets[0] });
+    } catch (err) {
+      showAlert(err.message || "An error occurred. Please try again.");
+    } finally {
+      spinning = false;
+      lever.setLocked(false);
+    }
   }
 
-  function showResult(result) {
+  function showResult({ win, payout, winSym }) {
     let cls = "sm-result-lose";
-    if (result.type === "jackpot") cls = "sm-result-jackpot";
-    else if (result.type === "win3") cls = "sm-result-win";
-    else if (result.type === "win2") cls = "sm-result-half";
+    let label = "No match. Try again!";
+    let payoutStr = "";
+
+    if (win) {
+      if (winSym.id === "bonus") {
+        cls = "sm-result-jackpot";
+        label = "JACKPOT!";
+      } else {
+        cls = "sm-result-win";
+        label = `Three ${winSym.name}!`;
+      }
+      payoutStr = `+$${Math.round(payout).toLocaleString("en-US")}`;
+    }
 
     resultEl.className = `sm-result-area ${cls} sm-result-show`;
     resultEl.innerHTML = `
-      <span class="sm-result-label">${result.label}</span>
-      ${result.payout > 0 ? `<span class="sm-result-payout">+${result.payout}</span>` : ""}
+      <span class="sm-result-label">${label}</span>
+      ${payoutStr ? `<span class="sm-result-payout">${payoutStr}</span>` : ""}
     `;
   }
 }
