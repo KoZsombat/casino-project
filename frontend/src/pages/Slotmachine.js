@@ -47,7 +47,7 @@ const VISIBLE   = 3;
 const STRIP_LEN = 24;
 
 function getSymH() {
-  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sm-sym-h")) || 130;
+  return parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue("--sm-sym-h")) || 130;
 }
 
 function buildStrip(target) {
