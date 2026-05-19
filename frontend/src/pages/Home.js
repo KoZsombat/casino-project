@@ -135,6 +135,13 @@ function initHomeEvents(element) {
     });
   });
 
+  const authBtn = element.querySelector("#authBtn");
+  if (authBtn) {
+    authBtn.addEventListener("click", () => {
+      window.location.hash = "#/login";
+    });
+  }
+
   const addBalanceBtn = element.querySelector("#heroActionBtn");
   if (addBalanceBtn) {
     addBalanceBtn.addEventListener("click", (e) => {

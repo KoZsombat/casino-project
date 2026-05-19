@@ -1,11 +1,15 @@
 import { setupHome } from './pages/Home.js';
 import { setupBlackjack } from './pages/Blackjack.js';
 import { setupRoulette } from './pages/Roulette.js';
+import { setupLogin } from './pages/Login.js';
+import { setupRegister } from './pages/Register.js';
 
 const routes = {
   '/': setupHome,
   '/blackjack': setupBlackjack,
   '/roulette': setupRoulette,
+  '/login': setupLogin,
+  '/register': setupRegister,
 };
 
 export function createRouter(element) {
