@@ -1,18 +1,19 @@
 import express from "express";
 import { con } from "../db/connection.js";
 import Auth from "../middleware/auth.js";
+import { depositSchema, validate } from "../validators.js";
 
 const transactionRouter = express.Router();
 
 transactionRouter.post("/deposit", Auth, async (req, res) => {
   try {
-    const { amount } = req.body;
+    const data = validate(depositSchema, req.body, res);
+    if (!data) return;
 
-    if (!amount || amount < 0)
-      return res.status(400).json({ error: "Invalid Request" });
+    const { amount } = data;
 
     const [sessionRow] = await con.query(
-      "SELECT * FROM sessions WHERE token = ?",
+      "SELECT user_id FROM sessions WHERE token = ?",
       [req.cookies.token],
     );
 
@@ -23,6 +24,7 @@ transactionRouter.post("/deposit", Auth, async (req, res) => {
       amount,
       sessionRow[0].user_id,
     ]);
+
     const [user] = await con.query("SELECT balance FROM users WHERE id = ?", [
       sessionRow[0].user_id,
     ]);

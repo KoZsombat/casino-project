@@ -6,7 +6,8 @@
   "scripts": {
     "prepare": "husky install",
     "lint": "eslint .",
-    "lint:ci": "eslint ."
+    "lint:ci": "eslint .",
+    "start": "concurrently \"npm --prefix frontend run dev\" \"npm --prefix backend start\""
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -17,6 +18,7 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.3.0",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.3"
+    "lint-staged": "^17.0.3",
+    "concurrently": "^8.2.0"
   }
 }

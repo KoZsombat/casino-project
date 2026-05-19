@@ -12,10 +12,10 @@ const CHIPS = [
 ];
 
 const OUTSIDE_LABELS = {
-  red: "PIROS",
-  black: "FEKETE",
-  odd: "PÁRATLAN",
-  even: "PÁROS",
+  red: "RED",
+  black: "BLACK",
+  odd: "ODD",
+  even: "EVEN",
   low: "1-18",
   high: "19-36",
   dozen1: "1st 12",
@@ -32,9 +32,8 @@ function numberColor(n) {
 }
 
 export function setupBettingTable(element, options) {
-  // options: { getBalance, onBetsChange }
   const bets = new Map(); // type -> amount
-  let lastBets = []; // legutóbbi körben elhelyezett tétek (újrafogadáshoz)
+  let lastBets = [];
   let selectedChip = 100;
   let disabled = false;
 
@@ -50,15 +49,15 @@ export function setupBettingTable(element, options) {
           </button>
         `,
         ).join("")}
-        <button class="rebet-btn" id="rebet" disabled>↻ Újra</button>
-        <button class="clear-btn" id="clear-all">Mind törlése</button>
+        <button class="rebet-btn" id="rebet" disabled>↻ Re-bet</button>
+        <button class="clear-btn" id="clear-all">Clear All</button>
       </div>
 
       <div class="table-grid" id="table-grid"></div>
 
       <div class="bet-summary">
-        <span>Aktív tét: <strong id="total-bet">0 Ft</strong></span>
-        <span>(Kattints: tét hozzáadása · Jobb klikk: levétel)</span>
+        <span>Total Bet: <strong id="total-bet">$0</strong></span>
+        <span>(Click: place bet · Right-click: remove)</span>
       </div>
     </div>
   `;
@@ -69,8 +68,7 @@ export function setupBettingTable(element, options) {
   const clearBtn = element.querySelector("#clear-all");
   const rebetBtn = element.querySelector("#rebet");
 
-  // Build cells
-  const cellMap = {}; // type -> element
+  const cellMap = {};
 
   function makeCell(type, label, classes, style) {
     const cell = document.createElement("div");
@@ -89,7 +87,6 @@ export function setupBettingTable(element, options) {
     return cell;
   }
 
-  // 0 - tall green cell
   const zeroCell = makeCell(
     "0",
     "0",
@@ -98,12 +95,8 @@ export function setupBettingTable(element, options) {
   );
   grid.appendChild(zeroCell);
 
-  // Numbers 1-36 arranged: row 1 top = 3,6,9...; row 2 = 2,5,8...; row 3 = 1,4,7...
   for (let col = 0; col < 12; col++) {
     for (let row = 0; row < 3; row++) {
-      // top row (row 0) -> 3,6,9... -> 3 + col*3
-      // mid row (row 1) -> 2,5,8... -> 2 + col*3
-      // bot row (row 2) -> 1,4,7... -> 1 + col*3
       const num = (3 - row) + col * 3;
       const c = numberColor(num);
       const cell = makeCell(
@@ -116,8 +109,6 @@ export function setupBettingTable(element, options) {
     }
   }
 
-  // 2:1 column bets (right side)
-  // top (row 1) -> col3 (3,6,9...), mid -> col2, bot -> col1
   const colMap = ["col3", "col2", "col1"];
   for (let row = 0; row < 3; row++) {
     const cell = makeCell(
@@ -129,7 +120,6 @@ export function setupBettingTable(element, options) {
     grid.appendChild(cell);
   }
 
-  // Dozens row (row 4)
   const dozens = [
     { type: "dozen1", cols: "2 / span 4" },
     { type: "dozen2", cols: "6 / span 4" },
@@ -145,7 +135,6 @@ export function setupBettingTable(element, options) {
     grid.appendChild(cell);
   });
 
-  // Outside bets row (row 5)
   const outsides = [
     { type: "low", cols: "2 / span 2", cls: "" },
     { type: "even", cols: "4 / span 2", cls: "" },
@@ -164,7 +153,6 @@ export function setupBettingTable(element, options) {
     grid.appendChild(cell);
   });
 
-  // Chip selector
   chipBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       if (disabled) return;
@@ -181,7 +169,7 @@ export function setupBettingTable(element, options) {
     if (disabled) return;
     const balance = options.getBalance();
     if (selectedChip > balance) {
-      showAlert("Nincs elég egyenleged!");
+      showAlert("Insufficient balance!");
       return;
     }
     const current = bets.get(type) || 0;
@@ -219,7 +207,7 @@ export function setupBettingTable(element, options) {
     const totalCost = lastBets.reduce((acc, b) => acc + b.amount, 0);
     const balance = options.getBalance();
     if (totalCost > balance) {
-      showAlert("Nincs elég egyenleged az újrafogadáshoz!");
+      showAlert("Insufficient balance to re-bet!");
       return;
     }
     lastBets.forEach((b) => {
@@ -244,7 +232,7 @@ export function setupBettingTable(element, options) {
       stack.innerHTML = "";
       cell.classList.remove("has-bet");
     } else {
-      stack.innerHTML = `<span class="bet-chip">${amount}</span>`;
+      stack.innerHTML = `<span class="bet-chip">$${amount}</span>`;
       cell.classList.add("has-bet");
     }
   }
@@ -252,7 +240,7 @@ export function setupBettingTable(element, options) {
   function updateTotal() {
     let total = 0;
     bets.forEach((v) => (total += v));
-    totalBetEl.textContent = `${total} Ft`;
+    totalBetEl.textContent = `$${total}`;
   }
 
   function asArray() {
@@ -264,7 +252,6 @@ export function setupBettingTable(element, options) {
       return asArray();
     },
     clear() {
-      // pörgetés után hívjuk — őrizzük meg az utolsó tétlistát újrafogadáshoz
       const snapshot = asArray();
       if (snapshot.length > 0) lastBets = snapshot;
       bets.clear();
