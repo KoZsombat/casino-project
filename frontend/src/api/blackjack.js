@@ -1,3 +1,5 @@
+import { apiPath } from "./client.js";
+
 // Score utilities still needed for UI rendering during the game
 function getRank(card) {
   return card.slice(0, -1);
@@ -54,7 +56,9 @@ export async function standBlackjack() {
 }
 
 export async function fetchBalance() {
-  const res = await fetch("/api/user/balance", { credentials: "include" });
+  const res = await fetch(apiPath("/api/user/balance"), {
+    credentials: "include",
+  });
   if (!res.ok) return null;
   const data = await res.json();
   return parseFloat(data.balance);

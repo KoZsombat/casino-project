@@ -1,10 +1,12 @@
+import { apiPath } from "./client.js";
+
 export async function spinRoulette(bets) {
   const normalizedBets = bets.map((bet) => {
     const asNum = Number(bet.type);
     return { ...bet, type: Number.isInteger(asNum) ? asNum : bet.type };
   });
 
-  const res = await fetch("/api/games/roulette/spin", {
+  const res = await fetch(apiPath("/api/games/roulette/spin"), {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

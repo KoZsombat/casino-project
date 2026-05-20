@@ -4,6 +4,7 @@ import {
   showFormError,
   clearFormError,
 } from "../components/auth/authShell.js";
+import { apiPath } from "../api/client.js";
 
 export function setupLogin(element, options = {}) {
   const navigate =
@@ -83,7 +84,7 @@ export function setupLogin(element, options = {}) {
     submitBtn.textContent = "Logging in...";
 
     try {
-      const res = await globalThis.fetch("/api/auth/login", {
+      const res = await globalThis.fetch(apiPath("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

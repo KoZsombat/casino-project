@@ -4,6 +4,7 @@ import {
   showFormError,
   clearFormError,
 } from "../components/auth/authShell.js";
+import { apiPath } from "../api/client.js";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function setupRegister(element, options = {}) {
@@ -122,7 +123,7 @@ export function setupRegister(element, options = {}) {
     submitBtn.textContent = "Registering...";
 
     try {
-      const res = await globalThis.fetch("/api/auth/register", {
+      const res = await globalThis.fetch(apiPath("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

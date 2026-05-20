@@ -1,5 +1,7 @@
+import { apiPath } from "./client.js";
+
 export async function spinSlot(amount) {
-  const res = await fetch("/api/games/slot/spin", {
+  const res = await fetch(apiPath("/api/games/slot/spin"), {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

@@ -1,4 +1,5 @@
 import "./Home.css";
+import { apiPath } from "../api/client.js";
 
 export function setupHome(element) {
   element.innerHTML = `
@@ -85,7 +86,9 @@ async function loadBalance(element) {
   const authBtn = element.querySelector("#authBtn");
 
   try {
-    const res = await fetch("/api/user/balance", { credentials: "include" });
+    const res = await fetch(apiPath("/api/user/balance"), {
+      credentials: "include",
+    });
 
     if (res.ok) {
       const data = await res.json();
@@ -97,26 +100,35 @@ async function loadBalance(element) {
         authBtn.onclick = async () => {
           authBtn.disabled = true;
           try {
-            await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+            await fetch(apiPath("/api/auth/logout"), {
+              method: "POST",
+              credentials: "include",
+            });
           } catch {
             // ignore network errors during logout
           }
           if (balanceEl) balanceEl.innerText = "$0";
           authBtn.textContent = "Login";
           authBtn.disabled = false;
-          authBtn.onclick = () => { window.location.hash = "#/login"; };
+          authBtn.onclick = () => {
+            window.location.hash = "#/login";
+          };
         };
       }
     } else {
       if (authBtn) {
         authBtn.textContent = "Login";
-        authBtn.onclick = () => { window.location.hash = "#/login"; };
+        authBtn.onclick = () => {
+          window.location.hash = "#/login";
+        };
       }
     }
   } catch {
     if (authBtn) {
       authBtn.textContent = "Login";
-      authBtn.onclick = () => { window.location.hash = "#/login"; };
+      authBtn.onclick = () => {
+        window.location.hash = "#/login";
+      };
     }
   }
 }
@@ -182,7 +194,7 @@ function initHomeEvents(element) {
       e.stopPropagation();
       addBalanceBtn.disabled = true;
       try {
-        const res = await fetch("/api/transactions/deposit", {
+        const res = await fetch(apiPath("/api/transactions/deposit"), {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
