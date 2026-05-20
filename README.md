@@ -6,6 +6,8 @@
 
 A browser-based casino app with three games: Slot Machine, Blackjack, and Roulette. Players can register, log in, manage a virtual balance, and play with no real-money transactions.
 
+Read the [Wiki](https://github.com/KoZsombat/casino-project/wiki/Wiki)
+
 ## Features
 
 - Home page with featured games and a quick `+ Add $500` balance top-up action
