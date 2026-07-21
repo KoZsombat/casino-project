@@ -1,159 +1,71 @@
 # Online Casino Platform
 
-![Frontend](https://img.shields.io/badge/frontend-JavaScript%20%2B%20Vite-f7df1e?style=flat-square)
-![Backend](https://img.shields.io/badge/backend-Express.js%20%2B%20Node.js-3c873a?style=flat-square)
-![Database](https://img.shields.io/badge/database-MySQL-00758f?style=flat-square)
+[![Frontend](https://img.shields.io/badge/frontend-JavaScript%20%2B%20Vite%208-f7df1e?style=flat-square)](frontend)
+[![Backend](https://img.shields.io/badge/backend-Express%205%20%2B%20MySQL-3c873a?style=flat-square)](backend)
+[![Games](https://img.shields.io/badge/games-Slots%20%C2%B7%20Blackjack%20%C2%B7%20Roulette-c62828?style=flat-square)](backend/src/controllers)
 
-A browser-based casino app with three games: Slot Machine, Blackjack, and Roulette. Players can register, log in, manage a virtual balance, and play with no real-money transactions.
+A browser casino with three games — slots, blackjack and roulette — built on a virtual balance. No real money goes anywhere near it; you sign up, get a thousand chips, and lose them at your own pace.
 
-Read the [Wiki](https://github.com/KoZsombat/casino-project/wiki/Wiki)
+There's more detail in the [Wiki](https://github.com/KoZsombat/casino-project/wiki/Wiki).
 
-## Features
+## What it does
 
-- Home page with featured games and a quick `+ Add $500` balance top-up action
-- User registration and login with cookie-based sessions
-- Virtual wallet balance stored in MySQL
-- Slot, Blackjack, and Roulette game flows
-- Hash-based frontend navigation for the game pages
+- Spins a three-reel slot machine, where matching the middle row pays out a multiple of your bet and three Bonus symbols pay a flat 5000
+- Deals blackjack with hit and stand against a dealer, the hand held server-side for the length of the round
+- Takes roulette bets from a full betting table, several at once, and settles them all against one spin
+- Keeps a virtual wallet in MySQL — new accounts start at 1000, and the home page has a quick `+ $500` top-up
+- Registers and signs users in with bcrypt-hashed passwords and an HTTP-only session cookie
 
-## Requirements
+Every game runs on the server. The frontend only asks for a spin or a card and renders whatever comes back, so nothing about the outcome is decided in the browser.
 
-- Node.js 18+
-- npm
-- MySQL 8+
+## Running it locally
 
-## Project Structure
-
-- `frontend/` - Vite SPA with the game UI, auth pages, and client-side routing
-- `backend/` - Express API, auth/session handling, validation, and game logic
-- `backend/db/schema.sql` - MySQL schema for users and sessions
-
-## Setup
-
-### 1. Install Dependencies
-
-Install the packages for both apps:
+You'll need Node 20.19+ (or 22.12+) and MySQL 8.
 
 ```bash
-cd backend
+git clone https://github.com/KoZsombat/casino-project
+cd casino-project
+
+# install everything
 npm install
-
-cd ../frontend
-npm install
+cd backend && npm install
+cd ../frontend && npm install
 ```
 
-### 2. Create the Database
-
-Open MySQL and create the database used by the app:
+Create the database and load the schema:
 
 ```bash
-mysql -u root -p
+cd ..
+mysql -u root -p -e "CREATE DATABASE casino_db"
+mysql -u root -p casino_db < backend/src/db/schema.sql
 ```
 
-```sql
-CREATE DATABASE casino_db;
-USE casino_db;
-SOURCE backend/db/schema.sql;
-```
+That gives you a `users` table with the balance on it and a `sessions` table for the cookie tokens.
 
-The schema creates two tables:
-
-- `users` with username, email, password hash, and starting balance
-- `sessions` with the cookie token and expiration timestamp
-
-### 3. Configure Environment Variables
-
-Create `backend/.env`:
-
-```env
-PORT=3000
-NODE_ENV=development
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=casino_db
-DB_USER=root
-DB_PASSWORD=jelszo
-SESSION_SECRET=hosszu_random_string_legalabb_32_karakter
-SESSION_EXPIRES_IN=86400
-ALLOWED_ORIGINS=http://localhost:5173
-```
-
-Create `frontend/.env.local` if you want to override the API base URL in the UI:
-
-```env
-VITE_API_URL=http://localhost:3000
-```
-
-Note: the Vite dev server already proxies `/api` requests to `http://localhost:3000`.
-
-### 4. Run the App
-
-Start the backend:
+Then copy the backend environment file and fill it in:
 
 ```bash
-cd backend
+cp backend/.env.example backend/.env
+```
+
+The ones that matter are your MySQL connection (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`), a `SESSION_SECRET` of at least 32 random characters, and `ALLOWED_ORIGINS` pointing at the frontend. The frontend needs no configuration — Vite proxies `/api` straight to `http://localhost:3000` in development.
+
+Start both from the repository root:
+
+```bash
 npm start
 ```
 
-Start the frontend:
+That runs the API and the Vite dev server together. If you'd rather have them apart, `npm start` in `backend/` and `npm run dev` in `frontend/` do the same thing in two terminals.
 
-```bash
-cd frontend
-npm run dev
-```
+The frontend runs at `http://localhost:5173`.
 
-You can also start both from the repository root:
+## Under the hood
 
-```bash
-npm run start
-```
+Plain JavaScript on the front, no framework — a hash router in `src/router.js`, one module per page in `src/pages`, and the API wrappers in `src/api`. The backend is Express 5 with mysql2, request bodies validated by zod, and helmet, CORS and rate limiting in front of everything. Auth is bcrypt plus a session row in MySQL, with the token in an HTTP-only cookie.
 
-### 5. Open the App
+The game logic lives in `backend/src/controllers` — one file each for slots, blackjack and roulette — and the routes that wrap them, take the bet and settle the balance are in `backend/src/routes/games.js`.
 
-Open the frontend at:
+## License
 
-```text
-http://localhost:5173
-```
-
-## API Overview
-
-Auth and user endpoints:
-
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `GET /api/user/balance`
-- `POST /api/transactions/deposit`
-
-Game endpoints:
-
-- `POST /api/games/slot/spin`
-- `POST /api/games/roulette/spin`
-- `POST /api/games/blackjack/start`
-- `POST /api/games/blackjack/hit`
-- `POST /api/games/blackjack/stand`
-
-## Scripts
-
-Root:
-
-- `npm run start` - run frontend and backend together
-- `npm run lint` - lint the repository
-
-Backend:
-
-- `npm start` - start the Express server
-- `npm run lint` - lint backend files
-
-Frontend:
-
-- `npm run dev` - start the Vite dev server
-- `npm run build` - create a production build
-- `npm run preview` - preview the production build
-
-## Notes
-
-- New users start with a balance of `1000`
-- The home page includes a quick deposit action that adds `500` to the logged-in user
-- Sessions are stored in MySQL and the auth token is kept in an HTTP-only cookie
+Built as a school project, provided as-is.
